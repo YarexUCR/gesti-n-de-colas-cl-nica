@@ -1,0 +1,8 @@
+[
+  {
+    "id": 1,
+    "nombre": "Consultorio 1",
+    "estado": "libre",
+    "idDoctor": null
+  }
+]

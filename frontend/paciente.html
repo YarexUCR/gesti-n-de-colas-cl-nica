@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Vista del Paciente</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+
+    h1 {
+      color: darkblue;
+    }
+
+    .seccion {
+      margin: 20px auto;
+      width: 80%;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      background-color: #f7f7f7;
+    }
+
+    #colaEspera li {
+      margin: 5px 0;
+    }
+
+    .atendiendo {
+      font-size: 24px;
+      color: darkgreen;
+      font-weight: bold;
+    }
+
+    .tiempo {
+      font-size: 18px;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>📢 Vista para Pacientes</h1>
+
+  <div class="seccion">
+    <h2>⏱ Tiempo promedio de espera</h2>
+    <p class="tiempo" id="tiempoPromedio">Calculando...</p>
+  </div>
+
+  <div class="seccion">
+    <h2>👥 En espera</h2>
+    <ul id="lista-pacientes" style="margin-top: 10px; font-size: 18px;"></ul>
+
+    <ul id="colaEspera"></ul>
+  </div>
+
+  <div class="seccion">
+    <h2>🩺 Paciente siendo atendido</h2>
+    <p class="atendiendo" id="pacienteActual">Esperando llamado...</p>
+  </div>
+
+  <script>
+    async function actualizarVistaPaciente() {
+      try {
+        const [resCola, resAtendiendo, resTiempo] = await Promise.all([
+          fetch('/api/cola'),
+          fetch('/api/paciente-actual'),
+          fetch('/api/tiempo-promedio')
+        ]);
+
+        const cola = await resCola.json();
+        const paciente = await resAtendiendo.json();
+        const tiempo = await resTiempo.json();
+
+        const listaCola = document.getElementById('colaEspera');
+        listaCola.innerHTML = '';
+        cola.forEach(p => {
+          const li = document.createElement('li');
+          li.textContent = `Paciente ${p.id} – ${p.nombre}`;
+          listaCola.appendChild(li);
+        });
+
+        document.getElementById('pacienteActual').textContent =
+          paciente ? `Paciente ${paciente.id} – ${paciente.nombre}` : 'Ninguno';
+
+        document.getElementById('tiempoPromedio').textContent =
+          tiempo ? `${tiempo} minutos` : 'No disponible';
+      } catch (err) {
+        console.error('Error actualizando vista paciente:', err);
+      }
+    }
+    let ultimoLlamado = null;
+
+async function actualizarVistaPaciente() {
+  try {
+    const [resCola, resAtendiendo, resTiempo] = await Promise.all([
+      fetch('/api/cola'),
+      fetch('/api/paciente-actual'),
+      fetch('/api/tiempo-promedio')
+    ]);
+
+    const cola = await resCola.json();
+    const paciente = await resAtendiendo.json();
+    const tiempo = await resTiempo.json();
+
+    // Mostrar cola
+    const listaCola = document.getElementById('colaEspera');
+    listaCola.innerHTML = '';
+    cola.forEach(p => {
+      const li = document.createElement('li');
+      li.textContent = `Paciente ${p.id} – ${p.nombre}`;
+      listaCola.appendChild(li);
+    });
+
+    // Mostrar paciente actual
+    const textoActual = paciente ? `Paciente ${paciente.id} – ${paciente.nombre}` : 'Esperando llamado...';
+    document.getElementById('pacienteActual').textContent = textoActual;
+
+    // Reproducir voz si hay nuevo paciente llamado
+    if (paciente && (!ultimoLlamado || paciente.id !== ultimoLlamado.id)) {
+      const mensaje = `Paciente ${paciente.id}, por favor pasar al consultorio`;
+      const speech = new SpeechSynthesisUtterance(mensaje);
+      speech.lang = 'es-ES';
+      window.speechSynthesis.speak(speech);
+      ultimoLlamado = paciente;
+    }
+
+    // Mostrar tiempo promedio
+    document.getElementById('tiempoPromedio').textContent =
+      tiempo ? `${tiempo} minutos` : 'No disponible';
+
+  } catch (err) {
+    console.error('Error actualizando vista paciente:', err);
+  }
+}
+
+
+
+    // Actualizar cada 5 segundos
+   // setInterval(actualizarVistaPaciente, 5000);
+    actualizarVistaPaciente();
+
+
+    function cargarPacientes() {
+    fetch('/api/pacientes')
+      .then(res => res.json())
+      .then(pacientes => {
+        const pacientesEnEspera = pacientes.filter(p => p.estado === 'esperando');
+        mostrarPacientes(pacientesEnEspera);
+      })
+      .catch(err => {
+        console.error("Error cargando pacientes:", err);
+      });
+  }
+
+  function mostrarPacientes(lista) {
+    const contenedor = document.getElementById('lista-pacientes');
+    contenedor.innerHTML = '';
+
+    if (lista.length === 0) {
+      contenedor.innerHTML = '<li>No hay pacientes en espera.</li>';
+      return;
+    }
+
+    lista.forEach(paciente => {
+      const li = document.createElement('li');
+      li.textContent = paciente.nombre;
+      contenedor.appendChild(li);
+    });
+  }
+
+  // Cargar pacientes cada 5 segundos
+  setInterval(cargarPacientes, 5000);
+  cargarPacientes();
+  </script>
+
+</body>
+</html>

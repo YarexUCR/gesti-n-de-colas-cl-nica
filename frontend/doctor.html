@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Panel del Doctor</title>
+</head>
+<body>
+  <h2>Panel del Doctor</h2>
+
+  <div>
+    <label for="consultorio">Seleccionar consultorio:</label>
+    <select id="consultorio"></select>
+    <button onclick="iniciarAtencion()">Llamar siguiente paciente</button>
+    <button onclick="terminarAtencion()">Finalizar consulta</button>
+  </div>
+
+  <div id="estadoAtencion" style="margin-top: 20px;"></div>
+
+  <script>
+    let pacienteActual = null;
+    let horaEntrada = null;
+
+    function getHoraActual() {
+      const ahora = new Date();
+      return ahora.toLocaleTimeString('es-CR', { hour12: false });
+    }
+
+    async function cargarConsultorios() {
+      const res = await fetch('/api/consultorios');
+      const consultorios = await res.json();
+      const select = document.getElementById('consultorio');
+      select.innerHTML = '';
+      consultorios.filter(c => !c.ocupado).forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c.id;
+        opt.textContent = `Consultorio ${c.id}`;
+        select.appendChild(opt);
+      });
+    }
+
+    async function iniciarAtencion() {
+      const consultorioId = parseInt(document.getElementById('consultorio').value);
+      const res = await fetch('/api/pacientes');
+      const pacientes = await res.json();
+
+      if (pacientes.length === 0) {
+        alert('No hay pacientes en espera.');
+        return;
+      }
+
+      pacienteActual = pacientes[0]; // FIFO
+      horaEntrada = getHoraActual();
+
+      await fetch('/api/atender', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pacienteId: pacienteActual.id, consultorioId, horaEntrada })
+      });
+
+      document.getElementById('estadoAtencion').textContent =
+        `Paciente ${pacienteActual.nombre} ha ingresado al consultorio ${consultorioId} a las ${horaEntrada}`;
+
+      cargarConsultorios();
+    }
+
+    async function terminarAtencion() {
+      if (!pacienteActual) return;
+
+      const horaSalida = getHoraActual();
+      await fetch('/api/finalizar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pacienteId: pacienteActual.id, horaSalida })
+      });
+
+      document.getElementById('estadoAtencion').textContent =
+        `Consulta finalizada para ${pacienteActual.nombre}. Hora de salida: ${horaSalida}`;
+
+      pacienteActual = null;
+      horaEntrada = null;
+      cargarConsultorios();
+    }
+
+    cargarConsultorios();
+  </script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+[
+  {
+    "pacienteId": 1,
+    "consultorioId": 1,
+    "horaEntrada": "21:34:40",
+    "horaSalida": "21:34:49"
+  },
+  {
+    "pacienteId": 2,
+    "consultorioId": 1,
+    "horaEntrada": "21:37:02",
+    "horaSalida": "00:24:29"
+  },
+  {
+    "pacienteId": 1,
+    "consultorioId": 2,
+    "horaEntrada": "00:22:20",
+    "horaSalida": "00:23:00"
+  },
+  {
+    "pacienteId": 2,
+    "consultorioId": 2,
+    "horaEntrada": "00:23:23",
+    "horaSalida": null
+  },
+  {
+    "pacienteId": 3,
+    "consultorioId": 1,
+    "horaEntrada": "00:24:56",
+    "horaSalida": null
+  }
+]

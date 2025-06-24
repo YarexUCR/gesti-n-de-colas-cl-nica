@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "usuario": "gerente1",
+    "clave": "1234",
+    "rol": "gerente"
+  },
+  {
+    "id": 2,
+    "usuario": "secretaria1",
+    "clave": "1234",
+    "rol": "secretaria"
+  },
+  {
+    "id": 3,
+    "usuario": "doctor1",
+    "clave": "1234",
+    "rol": "doctor"
+  },
+  {
+    "id": 4,
+    "usuario": "doctor2",
+    "clave": "1234",
+    "rol": "doctor"
+  },
+  {
+    "id": 5,
+    "usuario": "doctor3",
+    "clave": "1234",
+    "rol": "doctor"
+  },
+  {
+    "id": 6,
+    "usuario": "doctor4",
+    "clave": "1234",
+    "rol": "doctor"
+  }
+]
