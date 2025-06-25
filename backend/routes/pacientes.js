@@ -118,7 +118,7 @@ router.put('/pacientes/:id/salir', (req, res) => {
     return res.status(400).json({ mensaje: 'El paciente no está en consulta' });
   }
 
-  if (paciente.idDoctor !== idDoctor) {
+  if (paciente.doctorAsignado !== idDoctor) {
     return res.status(403).json({ mensaje: 'Este paciente no está asignado a usted' });
   }
 

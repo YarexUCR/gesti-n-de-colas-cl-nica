@@ -16,5 +16,5 @@ app.use('/api', require('./routes/metricas'));
 //app.use('/api', require('./routes/informes'));
 
 app.listen(PORT, () => {
-  console.log(`Servidor iniciado en http://localhost:${PORT}`);
+  console.log(`Servidor iniciado en http://localhost:${PORT}/login.html`);
 });

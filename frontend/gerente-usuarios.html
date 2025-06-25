@@ -5,24 +5,33 @@
   <meta charset="UTF-8" />
   <title>Gestión de Usuarios</title>
   <style>
-    body { font-family: Arial; margin: 0; padding: 20px; }
+       body { font-family: Arial; margin: 0; }
+    header { background:#2c3e50; color:white; padding:15px; }
+    nav { display:flex; justify-content:space-between; align-items:center; }
+    nav a { color:white; margin-right:20px; text-decoration: none; font-weight: bold; }
+    .content { padding: 20px; }
     table { width: 100%; border-collapse: collapse; margin-top: 20px; }
     th, td { padding: 10px; border: 1px solid #ccc; }
     th { background-color: #ecf0f1; }
     input, select, button { padding: 8px; margin: 5px; }
   </style>
 </head>
-<header style="background:#2c3e50; color:white; padding:15px;">
-    <nav style="display:flex; justify-content:space-between; align-items:center;">
-      <h2  style="margin:0;">  <a href="menu.html" style="color:white;  margin-right:20px;">Panel del Gerente </a>
-      </h2>
-      <div>
-        <a href="gerente-usuarios.html" style="color:white; margin-right:20px;">Usuarios</a>
-        <a href="gerente-consultorios.html" style="color:white;  margin-right:20px;">Consultorios</a>
-        <a href="calculos.html" style="color:white;  margin-right:20px;">Resultados</a>
-      </div>
-    </nav>
-  </header>
+<header>
+  <nav>
+    <h2 style="margin:0;"><a href="menu.html">Panel del Gerente</a></h2>
+    <div style="display: flex; gap: 10px;">
+      <a href="gerente-usuarios.html">Usuarios</a>
+      <a href="gerente-consultorios.html">Consultorios</a>
+      <div style="position: relative;">
+        <a href="#" onclick="toggleSubmenu(event)">Resultados ▾</a>
+        <div id="submenu" style="display: none; margin-left: 15px;">
+          <a href="calculos-datos-reales.html"> Resultados Reales</a><br>
+          <a href="calculos-simulacion.html">calculadora</a>
+        </div>
+    </div>
+    </div>
+  </nav>
+</header>
 
   <h3>👥 Gestión de Usuarios</h3>
 

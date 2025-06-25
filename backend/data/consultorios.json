@@ -3,13 +3,13 @@
     "id": 1,
     "nombre": "Consultorio 1",
     "estado": "ocupado",
-    "idDoctor": 1
+    "idDoctor": 3
   },
   {
     "id": 2,
     "nombre": "Consultorio 2",
     "estado": "ocupado",
-    "idDoctor": 3
+    "idDoctor": 4
   },
   {
     "id": 3,

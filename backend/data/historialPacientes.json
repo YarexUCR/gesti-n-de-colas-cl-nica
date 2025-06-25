@@ -138,5 +138,35 @@
     "horaSalidaConsultorio": "2025-06-24T23:58:56.884Z",
     "consultorioAsignado": 1,
     "doctorAsignado": 3
+  },
+  {
+    "id": 1,
+    "nombre": "Carlos Gamboa",
+    "horaIngresoHospital": "2025-06-25T04:27:52.560Z",
+    "estado": "finalizado",
+    "horaIngresoConsultorio": "2025-06-25T04:36:25.463Z",
+    "horaSalidaConsultorio": "2025-06-25T04:38:01.271Z",
+    "consultorioAsignado": 2,
+    "doctorAsignado": 4
+  },
+  {
+    "id": 1,
+    "nombre": "Carlos Gamboa",
+    "horaIngresoHospital": "2025-06-25T04:38:18.844Z",
+    "estado": "finalizado",
+    "horaIngresoConsultorio": "2025-06-25T04:38:43.257Z",
+    "horaSalidaConsultorio": "2025-06-25T04:39:12.605Z",
+    "consultorioAsignado": 2,
+    "doctorAsignado": 4
+  },
+  {
+    "id": 2,
+    "nombre": "Carlos Gamboa",
+    "horaIngresoHospital": "2025-06-25T04:38:39.240Z",
+    "estado": "finalizado",
+    "horaIngresoConsultorio": "2025-06-25T04:39:18.959Z",
+    "horaSalidaConsultorio": "2025-06-25T04:39:31.526Z",
+    "consultorioAsignado": 2,
+    "doctorAsignado": 4
   }
 ]
