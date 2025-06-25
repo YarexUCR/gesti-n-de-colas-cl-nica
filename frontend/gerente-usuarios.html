@@ -1,0 +1,98 @@
+<!-- gerente-usuarios.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Gestión de Usuarios</title>
+  <style>
+    body { font-family: Arial; margin: 0; padding: 20px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { padding: 10px; border: 1px solid #ccc; }
+    th { background-color: #ecf0f1; }
+    input, select, button { padding: 8px; margin: 5px; }
+  </style>
+</head>
+<header style="background:#2c3e50; color:white; padding:15px;">
+    <nav style="display:flex; justify-content:space-between; align-items:center;">
+      <h2  style="margin:0;">  <a href="menu.html" style="color:white;  margin-right:20px;">Panel del Gerente </a>
+      </h2>
+      <div>
+        <a href="gerente-usuarios.html" style="color:white; margin-right:20px;">Usuarios</a>
+        <a href="gerente-consultorios.html" style="color:white;  margin-right:20px;">Consultorios</a>
+        <a href="calculos.html" style="color:white;  margin-right:20px;">Resultados</a>
+      </div>
+    </nav>
+  </header>
+
+  <h3>👥 Gestión de Usuarios</h3>
+
+  <input id="nuevoUsuario" placeholder="Usuario">
+  <input id="nuevaClave" type="password" placeholder="Clave">
+  <select id="nuevoRol">
+    <option value="gerente">Gerente</option>
+    <option value="doctor">Doctor</option>
+    <option value="secretaria">Secretaria</option>
+  </select>
+  <button onclick="crearUsuario()">Registrar</button>
+
+  <table id="tablaUsuarios">
+    <thead>
+      <tr><th>ID</th><th>Usuario</th><th>Rol</th><th>Acción</th></tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    async function cargarUsuarios() {
+      const res = await fetch('/api/usuarios');
+      const usuarios = await res.json();
+      const tabla = document.querySelector('#tablaUsuarios tbody');
+      tabla.innerHTML = '';
+      usuarios.forEach(u => {
+        tabla.innerHTML += `
+          <tr>
+            <td>${u.id}</td>
+            <td>${u.usuario}</td>
+            <td>${u.rol}</td>
+            <td><button onclick="eliminarUsuario(${u.id})">Eliminar</button></td>
+          </tr>`;
+      });
+    }
+
+    async function crearUsuario() {
+      const usuario = document.getElementById('nuevoUsuario').value;
+      const clave = document.getElementById('nuevaClave').value;
+      const rol = document.getElementById('nuevoRol').value;
+
+      if (!usuario || !clave) return alert("Campos incompletos");
+
+      const res = await fetch('/api/usuarios', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ usuario, clave, rol })
+      });
+
+      if (res.ok) {
+        alert('Usuario registrado');
+        cargarUsuarios();
+      } else {
+        alert('Error al registrar');
+      }
+    }
+
+    async function eliminarUsuario(id) {
+      if (!confirm("¿Eliminar este usuario?")) return;
+
+      const res = await fetch(`/api/usuarios/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        alert('Usuario eliminado');
+        cargarUsuarios();
+      } else {
+        alert('Error al eliminar');
+      }
+    }
+
+    cargarUsuarios();
+  </script>
+</body>
+</html>

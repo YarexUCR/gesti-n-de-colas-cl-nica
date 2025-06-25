@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Panel del Doctor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="/js/auth.js"></script>
+  <script>
+    protegerPagina('doctor');
+  </script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f8fafc;
+      padding: 2rem;
+    }
+
+    h1 {
+      color: #1e3a8a;
+      margin-bottom: 1rem;
+    }
+
+    .card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.05);
+      margin-bottom: 2rem;
+      max-width: 500px;
+    }
+
+    button {
+      display: block;
+      width: 100%;
+      padding: 0.75rem;
+      border-radius: 8px;
+      border: none;
+      background-color: #0ea5e9;
+      color: white;
+      font-size: 1rem;
+      font-weight: bold;
+      margin-top: 1rem;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background-color: #0369a1;
+    }
+
+    #finalizar {
+      background-color: #10b981;
+    }
+
+    #finalizar:hover {
+      background-color: #047857;
+    }
+
+    .mensaje {
+      margin-top: 1rem;
+      color: green;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>👨‍⚕️ Panel del Doctor</h1>
+    <button onclick="llamarPaciente()">Llamar paciente</button>
+    <button id="finalizar" onclick="finalizarConsulta()">Finalizar consulta</button>
+    <div id="mensaje" class="mensaje"></div>
+    <button onclick="liberarConsultorio()" class="btn-danger">Salir del consultorio</button>
+
+  </div>
+
+  <script>
+    async function llamarPaciente() {
+      const idDoctor = localStorage.getItem('idDoctor');
+      const idConsultorio = localStorage.getItem('consultorioId');
+      const mensaje = document.getElementById('mensaje');
+
+      if (!idDoctor || !idConsultorio) {
+        mensaje.textContent = 'Falta información del doctor o consultorio.';
+        mensaje.style.color = 'red';
+        return;
+      }
+
+      try {
+        const resPacientes = await fetch('/api/pacientes/esperando');
+        const pacientes = await resPacientes.json();
+        const paciente = pacientes[0];
+
+        if (!paciente) {
+          mensaje.textContent = 'No hay pacientes en espera.';
+          mensaje.style.color = 'orange';
+          return;
+        }
+
+        const res = await fetch(`/api/pacientes/${paciente.id}/ingresar`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            idDoctor: parseInt(idDoctor),
+            idConsultorio: parseInt(idConsultorio)
+          })
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          mensaje.textContent = `Paciente ${data.paciente.nombre} llamado al consultorio ${idConsultorio}.`;
+          mensaje.style.color = 'green';
+        } else {
+          mensaje.textContent = data.mensaje || 'Error al llamar al paciente.';
+          mensaje.style.color = 'red';
+        }
+      } catch (err) {
+        mensaje.textContent = 'Error de red.';
+        mensaje.style.color = 'red';
+      }
+    }
+
+    async function finalizarConsulta() {
+      const mensaje = document.getElementById('mensaje');
+
+      try {
+        const res = await fetch('/api/pacientes');
+        const pacientes = await res.json();
+        const pacienteEnConsulta = pacientes.find(p => p.estado === 'en consulta');
+
+        if (!pacienteEnConsulta) {
+          mensaje.textContent = 'No hay paciente en consulta.';
+          mensaje.style.color = 'orange';
+          return;
+        }
+
+        const resFinal = await fetch(`/api/pacientes/${pacienteEnConsulta.id}/salir`, {
+          method: 'PUT'
+        });
+
+        const data = await resFinal.json();
+
+        if (resFinal.ok) {
+          mensaje.textContent = `Consulta finalizada para ${data.paciente.nombre}.`;
+          mensaje.style.color = 'green';
+        } else {
+          mensaje.textContent = data.mensaje || 'Error al finalizar consulta.';
+          mensaje.style.color = 'red';
+        }
+      } catch (err) {
+        mensaje.textContent = 'Error de red al finalizar consulta.';
+        mensaje.style.color = 'red';
+      }
+    }
+
+    async function liberarConsultorio() {
+    const idConsultorio = localStorage.getItem('consultorioId');
+    const idDoctor = localStorage.getItem('idDoctor');
+alert('idConsultorio: ' + idConsultorio + ', idDoctor: ' + idDoctor);
+    if (!idConsultorio || !idDoctor) {
+      alert('No hay consultorio asignado actualmente');
+      return;
+    }
+
+    const confirmacion = confirm("¿Desea salir del consultorio y dejarlo libre?");
+    if (!confirmacion) return;
+
+    try {
+      const res = await fetch(`/api/consultorios/${idConsultorio}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          estado: 'libre',
+          idDoctor: parseInt(idDoctor)
+        })
+      });
+
+      if (res.ok) {
+        alert('Consultorio liberado');
+        localStorage.removeItem('idConsultorio');
+        window.location.href = 'seleccionar-consultorio.html'; // volver a seleccionar consultorio
+      } else {
+        const err = await res.json();
+        alert('Error: ' + err.mensaje);
+      }
+    } catch (error) {
+      console.error('Error al liberar consultorio:', error);
+    }
+  }
+
+  </script>
+</body>
+</html>

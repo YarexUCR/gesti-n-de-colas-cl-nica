@@ -49,6 +49,7 @@ router.delete('/consultorios/:id', (req, res) => {
 });
 
 // Actualizar estado de uso del consultorio (asignar doctor o liberar)
+// Verificar disponibilidad antes de asignar doctor o liberar correctamente
 router.put('/consultorios/:id', (req, res) => {
   const id = parseInt(req.params.id);
   const { estado, idDoctor } = req.body;
@@ -64,12 +65,32 @@ router.put('/consultorios/:id', (req, res) => {
     return res.status(404).json({ mensaje: 'Consultorio no encontrado' });
   }
 
-  consultorio.estado = estado;
-  consultorio.idDoctor = estado === 'ocupado' ? idDoctor : null;
+  if (estado === 'ocupado') {
+    // Verificar si el doctor ya está en otro consultorio ocupado
+    const yaAsignado = consultorios.some(c => c.estado === 'ocupado' && c.idDoctor === idDoctor && c.id !== id);
+    if (yaAsignado) {
+      return res.status(400).json({ mensaje: 'Este doctor ya está asignado a otro consultorio ocupado' });
+    }
+
+    // Asignar el doctor al consultorio
+    consultorio.estado = 'ocupado';
+    consultorio.idDoctor = idDoctor;
+  }
+
+  if (estado === 'libre') {
+    // Solo puede liberar si el doctor que hace la solicitud es quien lo tiene ocupado
+    if (consultorio.estado === 'ocupado' && consultorio.idDoctor !== idDoctor) {
+      return res.status(403).json({ mensaje: 'No tiene permiso para liberar este consultorio' });
+    }
+
+    // Liberar el consultorio
+    consultorio.estado = 'libre';
+    consultorio.idDoctor = null;
+  }
 
   escribirJSON(consultoriosPath, consultorios);
-
   res.json({ mensaje: 'Consultorio actualizado', consultorio });
 });
+
 
 module.exports = router;

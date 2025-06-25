@@ -1,178 +1,163 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Vista del Paciente</title>
+  <meta charset="UTF-8" />
+  <title>Pacientes en espera y llamados</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      text-align: center;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f8fafc;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     h1 {
-      color: darkblue;
+      color: #1e3a8a;
+      margin-bottom: 1rem;
     }
 
     .seccion {
-      margin: 20px auto;
-      width: 80%;
-      padding: 20px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      background-color: #f7f7f7;
+      background: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      margin-bottom: 2rem;
+      width: 90%;
+      max-width: 600px;
     }
 
-    #colaEspera li {
-      margin: 5px 0;
+    .seccion h2 {
+      color: #0f172a;
+      margin-bottom: 1rem;
     }
 
-    .atendiendo {
-      font-size: 24px;
-      color: darkgreen;
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      padding: 0.5rem;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .llamado {
+      font-size: 1.5rem;
+      color: #065f46;
       font-weight: bold;
+      margin-top: 1rem;
     }
 
-    .tiempo {
-      font-size: 18px;
-      color: #333;
+    .esperando {
+      color: #64748b;
     }
   </style>
 </head>
 <body>
 
-  <h1>📢 Vista para Pacientes</h1>
+  <h1>🧑‍⚕️ Gestión de Pacientes</h1>
 
   <div class="seccion">
-    <h2>⏱ Tiempo promedio de espera</h2>
-    <p class="tiempo" id="tiempoPromedio">Calculando...</p>
-  </div>
-
-  <div class="seccion">
-    <h2>👥 En espera</h2>
-    <ul id="lista-pacientes" style="margin-top: 10px; font-size: 18px;"></ul>
-
-    <ul id="colaEspera"></ul>
+    <h2>🕒 En espera</h2>
+    <ul id="listaEspera" class="esperando">
+      <li>Cargando pacientes...</li>
+    </ul>
   </div>
 
   <div class="seccion">
     <h2>🩺 Paciente siendo atendido</h2>
-    <p class="atendiendo" id="pacienteActual">Esperando llamado...</p>
+    <p id="pacienteActual" class="llamado">Esperando llamado...</p>
   </div>
 
+  <audio id="sonidoLlamado" src="https://www.soundjay.com/button/beep-07.wav" preload="auto"></audio>
+
   <script>
-    async function actualizarVistaPaciente() {
+    let idUltimoLlamado = null;
+
+    async function cargarPacientes() {
       try {
-        const [resCola, resAtendiendo, resTiempo] = await Promise.all([
-          fetch('/api/cola'),
-          fetch('/api/paciente-actual'),
-          fetch('/api/tiempo-promedio')
-        ]);
+        // Cargar pacientes en espera
+        const res = await fetch('/api/pacientes');
+        const pacientes = await res.json();
+        const lista = document.getElementById('listaEspera');
 
-        const cola = await resCola.json();
-        const paciente = await resAtendiendo.json();
-        const tiempo = await resTiempo.json();
+        const enEspera = pacientes.filter(p => p.estado === 'esperando');
+        lista.innerHTML = enEspera.length > 0
+          ? enEspera.map(p => `<li>${p.nombre}</li>`).join('')
+          : '<li>No hay pacientes en espera</li>';
 
-        const listaCola = document.getElementById('colaEspera');
-        listaCola.innerHTML = '';
-        cola.forEach(p => {
-          const li = document.createElement('li');
-          li.textContent = `Paciente ${p.id} – ${p.nombre}`;
-          listaCola.appendChild(li);
-        });
-
-        document.getElementById('pacienteActual').textContent =
-          paciente ? `Paciente ${paciente.id} – ${paciente.nombre}` : 'Ninguno';
-
-        document.getElementById('tiempoPromedio').textContent =
-          tiempo ? `${tiempo} minutos` : 'No disponible';
-      } catch (err) {
-        console.error('Error actualizando vista paciente:', err);
+      } catch (error) {
+        console.error('Error al cargar pacientes:', error);
       }
     }
-    let ultimoLlamado = null;
 
-async function actualizarVistaPaciente() {
-  try {
-    const [resCola, resAtendiendo, resTiempo] = await Promise.all([
-      fetch('/api/cola'),
-      fetch('/api/paciente-actual'),
-      fetch('/api/tiempo-promedio')
-    ]);
+    let idsLlamados = [];
 
-    const cola = await resCola.json();
-    const paciente = await resAtendiendo.json();
-    const tiempo = await resTiempo.json();
-
-    // Mostrar cola
-    const listaCola = document.getElementById('colaEspera');
-    listaCola.innerHTML = '';
-    cola.forEach(p => {
-      const li = document.createElement('li');
-      li.textContent = `Paciente ${p.id} – ${p.nombre}`;
-      listaCola.appendChild(li);
-    });
-
-    // Mostrar paciente actual
-    const textoActual = paciente ? `Paciente ${paciente.id} – ${paciente.nombre}` : 'Esperando llamado...';
-    document.getElementById('pacienteActual').textContent = textoActual;
-
-    // Reproducir voz si hay nuevo paciente llamado
-    if (paciente && (!ultimoLlamado || paciente.id !== ultimoLlamado.id)) {
-      const mensaje = `Paciente ${paciente.id}, por favor pasar al consultorio`;
-      const speech = new SpeechSynthesisUtterance(mensaje);
-      speech.lang = 'es-ES';
-      window.speechSynthesis.speak(speech);
-      ultimoLlamado = paciente;
-    }
-
-    // Mostrar tiempo promedio
-    document.getElementById('tiempoPromedio').textContent =
-      tiempo ? `${tiempo} minutos` : 'No disponible';
-
-  } catch (err) {
-    console.error('Error actualizando vista paciente:', err);
-  }
+function hablar(texto) {
+  const msg = new SpeechSynthesisUtterance(texto);
+  msg.lang = 'es-ES';
+  window.speechSynthesis.speak(msg);
 }
 
+async function verificarLlamado() {
+  try {
+    const res = await fetch('/api/pacientes/llamado');
+    const pacienteActual = document.getElementById('pacienteActual');
 
-
-    // Actualizar cada 5 segundos
-   // setInterval(actualizarVistaPaciente, 5000);
-    actualizarVistaPaciente();
-
-
-    function cargarPacientes() {
-    fetch('/api/pacientes')
-      .then(res => res.json())
-      .then(pacientes => {
-        const pacientesEnEspera = pacientes.filter(p => p.estado === 'esperando');
-        mostrarPacientes(pacientesEnEspera);
-      })
-      .catch(err => {
-        console.error("Error cargando pacientes:", err);
-      });
-  }
-
-  function mostrarPacientes(lista) {
-    const contenedor = document.getElementById('lista-pacientes');
-    contenedor.innerHTML = '';
-
-    if (lista.length === 0) {
-      contenedor.innerHTML = '<li>No hay pacientes en espera.</li>';
+    if (res.status === 204) {
+      pacienteActual.textContent = 'Esperando llamado...';
+      idsLlamados = []; // reinicia si no hay ninguno
       return;
     }
 
-    lista.forEach(paciente => {
-      const li = document.createElement('li');
-      li.textContent = paciente.nombre;
-      contenedor.appendChild(li);
+    const pacientes = await res.json(); // ahora es un arreglo
+    if (!Array.isArray(pacientes)) {
+      console.error('Respuesta no esperada del backend.');
+      return;
+    }
+
+    if (pacientes.length === 0) {
+      pacienteActual.textContent = 'Esperando llamado...';
+      idsLlamados = [];
+      return;
+    }
+
+    // Mostrar lista de llamados
+    pacienteActual.innerHTML = pacientes.map(p => 
+      `${p.nombre} → Consultorio ${p.consultorioAsignado}`
+    ).join('<br>');
+
+    // Hablar solo nuevos llamados
+    pacientes.forEach(p => {
+      if (!idsLlamados.includes(p.id)) {
+        idsLlamados.push(p.id);
+        hablar(`Paciente ${p.nombre}, por favor diríjase al consultorio ${p.consultorioAsignado}`);
+      }
     });
+
+  } catch (error) {
+    console.error('Error al verificar llamado:', error);
   }
+}
 
-  // Cargar pacientes cada 5 segundos
-  setInterval(cargarPacientes, 5000);
-  cargarPacientes();
+// Intervalo automático
+setInterval(() => {
+  verificarLlamado();
+}, 5000);
+
+verificarLlamado();
+
+    // Carga inicial y cada 5 segundos
+    setInterval(() => {
+      cargarPacientes();
+      verificarLlamado();
+    }, 5000);
+
+    cargarPacientes();
+    verificarLlamado();
   </script>
-
 </body>
 </html>

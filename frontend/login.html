@@ -1,36 +1,112 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Login - Sistema de Colas</title>
+  <meta charset="UTF-8" />
+  <title>Login - Sistema de Hospital</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f1f5f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .card {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: #1e293b;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.75rem;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      margin-bottom: 1rem;
+    }
+
+    button {
+      width: 100%;
+      padding: 0.75rem;
+      border: none;
+      border-radius: 8px;
+      background: #0ea5e9;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .mensaje {
+      margin-top: 1rem;
+      text-align: center;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
-  <h2>Ingreso al sistema</h2>
-  <form id="loginForm">
-    <input type="text" id="usuario" placeholder="Usuario" required><br>
-    <input type="password" id="clave" placeholder="Contraseña" required><br>
-    <button type="submit">Ingresar</button>
-  </form>
+  <div class="card">
+    <h2>Iniciar Sesión</h2>
+    <input type="text" id="usuario" placeholder="Usuario" required />
+    <input type="password" id="clave" placeholder="Contraseña" required />
+    <button onclick="login()">Ingresar</button>
+    <div class="mensaje" id="mensaje"></div>
+  </div>
 
   <script>
-    document.getElementById('loginForm').addEventListener('submit', async function (e) {
-      e.preventDefault();
+    async function login() {
       const usuario = document.getElementById('usuario').value;
       const clave = document.getElementById('clave').value;
+      const mensaje = document.getElementById('mensaje');
 
-      const res = await fetch('/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ usuario, clave })
-      });
+      mensaje.textContent = '';
 
-      const data = await res.json();
-      if (res.ok) {
-        window.location.href = `/${data.rol}.html`;
-      } else {
-        alert(data.mensaje);
+      try {
+        const res = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ usuario, clave })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          mensaje.textContent = data.mensaje || 'Error de inicio de sesión';
+          mensaje.style.color = 'red';
+          return;
+        }
+
+        // Guardar datos de sesión
+        localStorage.setItem('usuario', data.usuario);
+        localStorage.setItem('idDoctor', data.id);
+        localStorage.setItem('rol', data.rol);
+
+        // Redirigir según rol
+        if (data.rol === 'doctor') {
+          window.location.href = '/seleccionar-consultorio.html';
+        } else if (data.rol === 'gerente') {
+          window.location.href = '/menu.html';
+        }  else if (data.rol === 'secretaria') {
+          window.location.href = '/secretaria.html';        }
+        else{
+          mensaje.textContent = 'Rol no soportado';
+        }
+
+      } catch (err) {
+        mensaje.textContent = 'Error de conexión';
+        mensaje.style.color = 'red';
       }
-    });
+    }
   </script>
 </body>
 </html>

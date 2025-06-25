@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Seleccionar Consultorio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <script src="/js/auth.js"></script>
+  <script>
+    protegerPagina('doctor');
+  </script>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f8fafc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .card {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      max-width: 400px;
+      width: 100%;
+    }
+
+    h2 {
+      text-align: center;
+      color: #1e3a8a;
+      margin-bottom: 1rem;
+    }
+
+    select, button {
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 1rem;
+      margin-top: 0.5rem;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+    }
+
+    button {
+      background-color: #10b981;
+      color: white;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+
+    .mensaje {
+      margin-top: 1rem;
+      text-align: center;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Seleccionar Consultorio</h2>
+    <label for="consultorio">Consultorios disponibles:</label>
+    <select id="consultorio"></select>
+    <button onclick="asignarConsultorio()">Usar este consultorio</button>
+    <div class="mensaje" id="mensaje"></div>
+  </div>
+
+  <script>
+    async function cargarConsultorios() {
+      try {
+        const res = await fetch('/api/consultorios');
+        const consultorios = await res.json();
+        const select = document.getElementById('consultorio');
+        const libres = consultorios.filter(c => c.estado === 'libre');
+
+        if (libres.length === 0) {
+          select.innerHTML = '<option value="">No hay consultorios disponibles</option>';
+        } else {
+          select.innerHTML = libres.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('');
+        }
+      } catch (err) {
+        document.getElementById('mensaje').textContent = 'Error al cargar consultorios.';
+      }
+    }
+
+    async function asignarConsultorio() {
+      const idDoctor = localStorage.getItem('idDoctor');
+      const idConsultorio = document.getElementById('consultorio').value;
+
+      if (!idConsultorio) {
+        document.getElementById('mensaje').textContent = 'Debe seleccionar un consultorio.';
+        return;
+      }
+
+      try {
+        const res = await fetch(`/api/consultorios/${idConsultorio}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ estado: 'ocupado', idDoctor: parseInt(idDoctor) })
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          // Guardar consultorio para uso posterior
+          localStorage.setItem('consultorioId', idConsultorio);
+          window.location.href = '/doctor-panel.html';
+        } else {
+          document.getElementById('mensaje').textContent = data.mensaje || 'No se pudo asignar.';
+        }
+      } catch (err) {
+        document.getElementById('mensaje').textContent = 'Error de red.';
+      }
+    }
+
+    cargarConsultorios();
+  </script>
+</body>
+</html>

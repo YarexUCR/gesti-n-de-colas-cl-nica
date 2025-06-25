@@ -11,6 +11,7 @@ app.use('/api', require('./routes/login'));
 app.use('/api', require('./routes/usuarios'));
 app.use('/api', require('./routes/consultorios'));
 app.use('/api', require('./routes/pacientes'));
+app.use('/api', require('./routes/metricas'));
 //app.use('/api', require('./routes/eventos'));
 //app.use('/api', require('./routes/informes'));
 

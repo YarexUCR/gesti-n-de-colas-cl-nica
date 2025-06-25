@@ -1,0 +1,90 @@
+<!-- gerente-consultorios.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Gestión de Consultorios</title>
+  <style>
+    body { font-family: Arial; margin: 0; padding: 20px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { padding: 10px; border: 1px solid #ccc; }
+    th { background-color: #ecf0f1; }
+    input, button { padding: 8px; margin: 5px; }
+  </style>
+</head>
+<body>
+    <header style="background:#2c3e50; color:white; padding:15px;">
+        <nav style="display:flex; justify-content:space-between; align-items:center;">
+          <h2  style="margin:0;">  <a href="menu.html" style="color:white;  margin-right:20px;">Panel del Gerente </a>
+          </h2>
+          <div>
+            <a href="gerente-usuarios.html" style="color:white; margin-right:20px;">Usuarios</a>
+            <a href="gerente-consultorios.html" style="color:white;  margin-right:20px;">Consultorios</a>
+            <a href="calculos.html" style="color:white;  margin-right:20px;">Resultados</a>
+          </div>
+        </nav>
+      </header>
+
+  <h3>🏥 Gestión de Consultorios</h3>
+
+  <input id="nombreConsultorio" placeholder="Nombre del consultorio">
+  <button onclick="crearConsultorio()">Agregar</button>
+
+  <table id="tablaConsultorios">
+    <thead>
+      <tr><th>ID</th><th>Nombre</th><th>Estado</th><th>Acción</th></tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    async function cargarConsultorios() {
+      const res = await fetch('/api/consultorios');
+      const consultorios = await res.json();
+      const tabla = document.querySelector('#tablaConsultorios tbody');
+      tabla.innerHTML = '';
+      consultorios.forEach(c => {
+        tabla.innerHTML += `
+          <tr>
+            <td>${c.id}</td>
+            <td>${c.nombre}</td>
+            <td>${c.estado}</td>
+            <td><button onclick="eliminarConsultorio(${c.id})">Eliminar</button></td>
+          </tr>`;
+      });
+    }
+
+    async function crearConsultorio() {
+      const nombre = document.getElementById('nombreConsultorio').value;
+      if (!nombre) return alert("Ingrese el nombre");
+
+      const res = await fetch('/api/consultorios', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nombre })
+      });
+
+      if (res.ok) {
+        alert('Consultorio creado');
+        cargarConsultorios();
+      } else {
+        alert('Error al crear');
+      }
+    }
+
+    async function eliminarConsultorio(id) {
+      if (!confirm("¿Eliminar consultorio?")) return;
+
+      const res = await fetch(`/api/consultorios/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        alert('Consultorio eliminado');
+        cargarConsultorios();
+      } else {
+        alert('Error al eliminar');
+      }
+    }
+
+    cargarConsultorios();
+  </script>
+</body>
+</html>

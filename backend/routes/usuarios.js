@@ -11,6 +11,8 @@ router.get('/usuarios', (req, res) => {
   res.json(usuarios);
 });
 
+
+
 // Crear un nuevo usuario
 router.post('/usuarios', (req, res) => {
   const { usuario, clave, rol } = req.body;

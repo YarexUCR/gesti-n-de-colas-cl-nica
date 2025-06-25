@@ -1,0 +1,142 @@
+[
+  {
+    "id": 1,
+    "nombre": "Carlos",
+    "horaIngresoHospital": "2025-06-23T16:00:00.000Z",
+    "estado": "finalizado",
+    "horaIngresoConsultorio": "2025-06-24T22:25:26.389Z",
+    "horaSalidaConsultorio": "2025-06-24T22:35:04.368Z",
+    "consultorioAsignado": 1,
+    "doctorAsignado": 3
+  },
+  {
+    "id": 2,
+    "nombre": "Carlos Gamboa",
+    "horaIngresoHospital": "2025-06-24T19:50:45.325Z",
+    "estado": "finalizado",
+    "horaIngresoConsultorio": "2025-06-24T22:35:18.308Z",
+    "horaSalidaConsultorio": "2025-06-24T22:40:35.029Z",
+    "consultorioAsignado": 1,
+    "doctorAsignado": 3
+  },
+  {
+    "id": 3,
+    "nombre": "Carlos Gamboa",
+    "horaIngresoHospital": "2025-06-24T19:50:49.017Z",
+    "estado": "finalizado",
+    "horaIngresoConsultorio": "2025-06-24T22:40:40.397Z",
+    "horaSalidaConsultorio": "2025-06-24T22:42:33.894Z",
+    "consultorioAsignado": 1,
+    "doctorAsignado": 3
+  },
+  {
+    "id": 4,
+    "nombre": "Hermanos Torres",
+    "horaIngresoHospital": "2025-06-24T19:50:58.523Z",
+    "estado": "finalizado",
+    "horaIngresoConsultorio": "2025-06-24T22:42:37.247Z",
+    "horaSalidaConsultorio": "2025-06-24T22:44:54.084Z",
+    "consultorioAsignado": 1,
+    "doctorAsignado": 3
+  },
+  {
+    "id": 5,
+    "nombre": "luis ramirez",
+    "horaIngresoHospital": "2025-06-24T19:51:00.187Z",
+    "estado": "finalizado",
+    "horaIngresoConsultorio": "2025-06-24T22:44:46.541Z",
+    "horaSalidaConsultorio": "2025-06-24T22:45:26.897Z",
+    "consultorioAsignado": 2,
+    "doctorAsignado": 4
+  },
+  {
+    "id": 6,
+    "nombre": "Fredy Aguilar",
+    "horaIngresoHospital": "2025-06-24T19:51:02.548Z",
+    "estado": "finalizado",
+    "horaIngresoConsultorio": "2025-06-24T22:44:56.052Z",
+    "horaSalidaConsultorio": "2025-06-24T22:45:28.798Z",
+    "consultorioAsignado": 1,
+    "doctorAsignado": 3
+  },
+  {
+    "id": 7,
+    "nombre": "Hacienda juan viñas",
+    "horaIngresoHospital": "2025-06-24T19:51:06.022Z",
+    "estado": "finalizado",
+    "horaIngresoConsultorio": "2025-06-24T22:45:36.088Z",
+    "horaSalidaConsultorio": "2025-06-24T22:47:02.227Z",
+    "consultorioAsignado": 2,
+    "doctorAsignado": 4
+  },
+  {
+    "id": 8,
+    "nombre": "Fredy Mercury",
+    "horaIngresoHospital": "2025-06-24T19:53:29.220Z",
+    "estado": "finalizado",
+    "horaIngresoConsultorio": "2025-06-24T22:45:37.057Z",
+    "horaSalidaConsultorio": "2025-06-24T22:47:05.344Z",
+    "consultorioAsignado": 1,
+    "doctorAsignado": 3
+  },
+  {
+    "id": 1,
+    "nombre": "Carlos Gamboa",
+    "horaIngresoHospital": "2025-06-24T23:55:22.332Z",
+    "estado": "finalizado",
+    "horaIngresoConsultorio": "2025-06-24T23:56:47.156Z",
+    "horaSalidaConsultorio": "2025-06-24T23:57:07.599Z",
+    "consultorioAsignado": 1,
+    "doctorAsignado": 3
+  },
+  {
+    "id": 2,
+    "nombre": "luis ramirez",
+    "horaIngresoHospital": "2025-06-24T23:55:29.371Z",
+    "estado": "finalizado",
+    "horaIngresoConsultorio": "2025-06-24T23:57:37.448Z",
+    "horaSalidaConsultorio": "2025-06-24T23:57:52.913Z",
+    "consultorioAsignado": 1,
+    "doctorAsignado": 3
+  },
+  {
+    "id": 3,
+    "nombre": "Pedro Torres",
+    "horaIngresoHospital": "2025-06-24T23:55:36.623Z",
+    "estado": "finalizado",
+    "horaIngresoConsultorio": "2025-06-24T23:57:53.940Z",
+    "horaSalidaConsultorio": "2025-06-24T23:58:02.534Z",
+    "consultorioAsignado": 1,
+    "doctorAsignado": 3
+  },
+  {
+    "id": 4,
+    "nombre": "Virgilo Vargas",
+    "horaIngresoHospital": "2025-06-24T23:55:44.424Z",
+    "estado": "finalizado",
+    "horaIngresoConsultorio": "2025-06-24T23:58:03.082Z",
+    "horaSalidaConsultorio": "2025-06-24T23:58:18.386Z",
+    "consultorioAsignado": 1,
+    "doctorAsignado": 3
+  },
+  {
+    "id": 5,
+    "nombre": "Pablo Núñez",
+    "horaIngresoHospital": "2025-06-24T23:55:59.230Z",
+    "estado": "finalizado",
+    "horaIngresoConsultorio": "2025-06-24T23:58:22.121Z",
+    "horaSalidaConsultorio": "2025-06-24T23:58:27.607Z",
+    "consultorioAsignado": 1,
+    "doctorAsignado": 3
+  },
+  {
+    "id": 6,
+    "nombre": "Fredy Aguilar",
+    "horaIngresoHospital": "2025-06-24T23:57:15.298Z",
+    "estado": "finalizado",
+    "horaIngresoConsultorio": "2025-06-24T23:58:28.092Z",
+    "horaSalidaConsultorio": "2025-06-24T23:58:56.884Z",
+    "consultorioAsignado": 1,
+    "doctorAsignado": 3
+  }
+]
