@@ -96,7 +96,10 @@
         }
 
 
-       
+       .facility-icon i {
+  color: rgba(255, 255, 255, 0.8); /* Blanco con transparencia */
+  font-size: 2.5rem; /* Tamaño grande */
+}
         
         .next-numbers-panel {
             background: linear-gradient(135deg, #667eea, #764ba2);

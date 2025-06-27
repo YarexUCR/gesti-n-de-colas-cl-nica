@@ -10,11 +10,5 @@
     "nombre": "consultorio2",
     "estado": "libre",
     "idDoctor": null
-  },
-  {
-    "id": 3,
-    "nombre": "consultorio3",
-    "estado": "libre",
-    "idDoctor": null
   }
 ]
