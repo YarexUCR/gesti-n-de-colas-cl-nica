@@ -2,8 +2,8 @@
   {
     "id": 1,
     "nombre": "consultorio1",
-    "estado": "ocupado",
-    "idDoctor": 3
+    "estado": "libre",
+    "idDoctor": null
   },
   {
     "id": 2,
