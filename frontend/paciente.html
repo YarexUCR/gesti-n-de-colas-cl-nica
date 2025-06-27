@@ -4,77 +4,80 @@
   <meta charset="UTF-8" />
   <title>Pacientes en espera y llamados</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f8fafc;
-      padding: 2rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    h1 {
-      color: #1e3a8a;
-      margin-bottom: 1rem;
-    }
-
-    .seccion {
-      background: white;
-      padding: 1.5rem;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      margin-bottom: 2rem;
-      width: 90%;
-      max-width: 600px;
-    }
-
-    .seccion h2 {
-      color: #0f172a;
-      margin-bottom: 1rem;
-    }
-
-    ul {
-      list-style: none;
-      padding: 0;
-    }
-
-    li {
-      padding: 0.5rem;
-      border-bottom: 1px solid #e2e8f0;
-    }
-
-    .llamado {
-      font-size: 1.5rem;
-      color: #065f46;
-      font-weight: bold;
-      margin-top: 1rem;
-    }
-
-    .esperando {
-      color: #64748b;
-    }
-  </style>
+  <link rel="stylesheet" href="css/paciente.css?3" />
 </head>
 <body>
 
-  <h1>🧑‍⚕️ Gestión de Pacientes</h1>
+  <div class="hospital-container">
 
-  <div class="seccion">
-    <h2>🕒 En espera</h2>
-    <ul id="listaEspera" class="esperando">
-      <li>Cargando pacientes...</li>
-    </ul>
+    <div class="header">
+      <h1>HOSPITAL GENERAL</h1>
+      <p>Sala de Espera - Consulta Externa</p>
+    </div>
+
+    <div class="clock" id="clock">
+      <span id="current-time"></span>
+    </div>
+
+    <div class="main-area">
+
+      <div  class="current-number-panel">
+
+        <div class="current-title" >TURNO ACTUAL</div>
+        <div class="current-number" id="pacienteActualNombre">A-045</div>
+        <div class="current-subtitle" id="pacienteActualConsultorio">CONSULTORIO 1</div>
+
+      </div>
+
+      <div class="next-numbers-panel">
+
+        <div class="next-title">PRÓXIMOS TURNOS</div>
+        <div id="conteoPacientes" class="next-count">Cargando pacientes...</div>
+        <div class="next-numbers-list" id="listaEsperaNueva">
+          <div class="next-number-item">
+            <div class="next-number">Cargando pacientes...</div>
+            <div class="next-status">EN ESPERA</div>
+          </div>
+        </div>
+        
+      </div>
+
+    </div>
+
+
+    <div class="facilities">
+            <div class="facility">
+                <div class="facility-icon">🚻</div>
+                <h3>Baños</h3>
+                <p>Disponibles en el pasillo principal</p>
+            </div>
+            <div class="facility">
+                <div class="facility-icon">☕</div>
+                <h3>Cafetería</h3>
+                <p>Abierta de 6:00 AM a 6:00 PM</p>
+            </div>
+            <div class="facility">
+                <div class="facility-icon">📱</div>
+                <h3>WiFi Gratuito</h3>
+                <p>Red: Hospital_WiFi</p>
+            </div>
+            <div class="facility">
+                <div class="facility-icon">🚗</div>
+                <h3>Estacionamiento</h3>
+                <p>Disponible 24/7</p>
+            </div>
+    </div>
+
+
+
   </div>
 
-  <div class="seccion">
-    <h2>🩺 Paciente siendo atendido</h2>
-    <p id="pacienteActual" class="llamado">Esperando llamado...</p>
-  </div>
 
   <audio id="sonidoLlamado" src="https://www.soundjay.com/button/beep-07.wav" preload="auto"></audio>
 
+
   <script>
+
     let idUltimoLlamado = null;
 
     async function cargarPacientes() {
@@ -82,12 +85,25 @@
         // Cargar pacientes en espera
         const res = await fetch('/api/pacientes');
         const pacientes = await res.json();
-        const lista = document.getElementById('listaEspera');
+        const lista = document.getElementById('listaEsperaNueva');
 
         const enEspera = pacientes.filter(p => p.estado === 'esperando');
+
+        document.getElementById('conteoPacientes').textContent = `Total en espera: ${enEspera.length}`;
+
         lista.innerHTML = enEspera.length > 0
-          ? enEspera.map(p => `<li>${p.nombre}</li>`).join('')
-          : '<li>No hay pacientes en espera</li>';
+          ? enEspera.map(p => `
+              <div class="next-number-item">
+                <div class="next-number">${p.nombre}</div>
+                <div class="next-status">EN ESPERA</div>
+              </div>
+            `).join('')
+          : `
+            <div class="next-number-item">
+              <div class="next-number">No hay pacientes en espera</div>
+              <div class="next-status">EN ESPERA</div>
+            </div>
+          `;
 
       } catch (error) {
         console.error('Error al cargar pacientes:', error);
@@ -96,59 +112,65 @@
 
     let idsLlamados = [];
 
-function hablar(texto) {
+    function hablar(texto) {
   const msg = new SpeechSynthesisUtterance(texto);
   msg.lang = 'es-ES';
   window.speechSynthesis.speak(msg);
 }
 
-async function verificarLlamado() {
-  try {
-    const res = await fetch('/api/pacientes/llamado');
-    const pacienteActual = document.getElementById('pacienteActual');
+    async function verificarLlamado() {
+      try {
+        const res = await fetch('/api/pacientes/llamado');
+        const nombreDiv = document.getElementById('pacienteActualNombre');
+        const consultorioDiv = document.getElementById('pacienteActualConsultorio');
 
-    if (res.status === 204) {
-      pacienteActual.textContent = 'Esperando llamado...';
-      idsLlamados = []; // reinicia si no hay ninguno
-      return;
-    }
+        if (res.status === 204) {
+          nombreDiv.textContent = 'Esperando llamado...';
+          consultorioDiv.textContent = '';
+          idsLlamados = [];
+          return;
+        }
 
-    const pacientes = await res.json(); // ahora es un arreglo
-    if (!Array.isArray(pacientes)) {
-      console.error('Respuesta no esperada del backend.');
-      return;
-    }
+        const pacientes = await res.json();
 
-    if (pacientes.length === 0) {
-      pacienteActual.textContent = 'Esperando llamado...';
-      idsLlamados = [];
-      return;
-    }
+        if (!Array.isArray(pacientes)) {
+          console.error('Respuesta no esperada del backend.');
+          return;
+        }
 
-    // Mostrar lista de llamados
-    pacienteActual.innerHTML = pacientes.map(p => 
-      `${p.nombre} → Consultorio ${p.consultorioAsignado}`
-    ).join('<br>');
+        if (pacientes.length === 0) {
+          nombreDiv.textContent = 'Esperando llamado...';
+          consultorioDiv.textContent = '';
+          idsLlamados = [];
+          return;
+        }
 
-    // Hablar solo nuevos llamados
-    pacientes.forEach(p => {
-      if (!idsLlamados.includes(p.id)) {
-        idsLlamados.push(p.id);
-        hablar(`Paciente ${p.nombre}, por favor diríjase al consultorio ${p.consultorioAsignado}`);
+        // Mostramos el primer paciente (puedes ajustar si deseas mostrar varios)
+        const p = pacientes[0];
+        nombreDiv.textContent = p.nombre || 'Paciente';
+        consultorioDiv.textContent = p.consultorioAsignado
+          ? `CONSULTORIO ${p.consultorioAsignado}`
+          : 'Sin consultorio';
+
+        // Hablar solo nuevos llamados
+        pacientes.forEach(p => {
+          if (!idsLlamados.includes(p.id)) {
+            idsLlamados.push(p.id);
+            hablar(`Paciente ${p.nombre}, por favor diríjase al consultorio ${p.consultorioAsignado}`);
+          }
+        });
+
+      } catch (error) {
+        console.error('Error al verificar llamado:', error);
       }
-    });
+    }
 
-  } catch (error) {
-    console.error('Error al verificar llamado:', error);
-  }
-}
+    // Intervalo automático
+    setInterval(() => {
+      verificarLlamado();
+    }, 5000);
 
-// Intervalo automático
-setInterval(() => {
-  verificarLlamado();
-}, 5000);
-
-verificarLlamado();
+    verificarLlamado();
 
     // Carga inicial y cada 5 segundos
     setInterval(() => {
@@ -158,6 +180,21 @@ verificarLlamado();
 
     cargarPacientes();
     verificarLlamado();
+
+    function updateClock() {
+      const now = new Date();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+      const currentTime = `${hours}:${minutes}:${seconds}`;
+      document.getElementById("current-time").textContent = currentTime;
+    }
+
+    // Actualiza la hora inmediatamente y luego cada segundo
+    updateClock();
+    setInterval(updateClock, 1000);
+
   </script>
+
 </body>
 </html>

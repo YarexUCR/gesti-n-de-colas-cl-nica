@@ -9,15 +9,33 @@
       protegerPagina("doctor");
     </script>
     <style>
-      body {
-        font-family: "Segoe UI", sans-serif;
-        background: #f8fafc;
-        padding: 2rem;
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
       }
+       body {
+            font-family: 'Arial', sans-serif;
+            /* background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); */
+            overflow-x: auto;
+            min-height: 100vh;
+              background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
 
       h1 {
         color: #1e3a8a;
         margin-bottom: 1rem;
+      }
+
+      .contenedor-panel-doctor {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      
+       
       }
 
       .card {
@@ -26,7 +44,17 @@
         border-radius: 12px;
         box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
         margin-bottom: 2rem;
-        max-width: 500px;
+        width: 100%;
+        max-width: 600px;
+
+
+         /* background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 25px;
+            padding: 45px 50px;
+            box-shadow: 0 20px 50px rgba(102, 126, 234, 0.3);
+            position: relative;
+            overflow: hidden;
+         */
       }
 
       button {
@@ -64,17 +92,24 @@
     </style>
   </head>
   <body>
-    <div class="card">
-      <h1>👨‍⚕️ Panel del Doctor</h1>
-      <button onclick="llamarPaciente()">Llamar paciente</button>
-      <button id="finalizar" onclick="finalizarConsulta()">
-        Finalizar consulta
-      </button>
-      <div id="mensaje" class="mensaje"></div>
-      <button onclick="liberarConsultorio()" class="btn-danger">
-        Salir del consultorio
-      </button>
+
+
+    <div class="contenedor-panel-doctor">
+      <div class="card">
+        <h1>👨‍⚕️ Panel del Doctor</h1>
+        <button onclick="llamarPaciente()">Llamar paciente</button>
+        <button id="finalizar" onclick="finalizarConsulta()">
+          Finalizar consulta
+        </button>
+        <div id="mensaje" class="mensaje"></div>
+        <button onclick="liberarConsultorio()" class="btn-danger">
+          Salir del consultorio
+        </button>
+      </div>
     </div>
+
+
+    
 
     <script>
      async function llamarPaciente() {

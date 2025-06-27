@@ -4,17 +4,25 @@
     <meta charset="UTF-8" />
     <title>Simulación M/M/c</title>
     <style>
+      * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
       body {
         font-family: Arial, sans-serif;
-        padding: 2rem;
+ 
         background: #f9f9f9;
       }
       .section {
+        margin: 50px 20px;
         margin-bottom: 2rem;
         padding: 1rem;
         background: #fff;
         border-radius: 10px;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        width: 100%;
       }
       h2 {
         margin-top: 0;
@@ -33,10 +41,16 @@
         padding: 0.5rem 1rem;
       }
       body { font-family: Arial; margin: 0; }
-    header { background:#2c3e50; color:white; padding:15px; }
+    header { background:#2c3e50; color:white; padding:15px;  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
     nav { display:flex; justify-content:space-between; align-items:center; }
     nav a { color:white; margin-right:20px; text-decoration: none; font-weight: bold; }
     .content { padding: 20px; }
+
+    .container-sections {
+      display: flex;
+      justify-content: center;
+     
+    }
 
     </style>
   </head>
@@ -44,20 +58,22 @@
     <nav>
       <h2 style="margin:0;"><a href="menu.html">Panel del Gerente</a></h2>
       <div style="display: flex; gap: 10px;">
-        <a href="gerente-usuarios.html">Usuarios</a>
+         <a href="gerente-usuarios.html">Usuarios</a>
         <a href="gerente-consultorios.html">Consultorios</a>
-        <div style="position: relative;">
-          <a href="#" onclick="toggleSubmenu(event)">Resultados ▾</a>
-          <div id="submenu" style="display: none; margin-left: 15px;">
-            <a href="calculos-datos-reales.html"> Resultados Reales</a><br>
-            <a href="calculos-simulacion.html">calculadora</a>
-          </div>
-      </div>
+        <a href="calculos-datos-reales.html">Resultados datos reales</a>
+        <a href="calculos-simulacion.html">Resultados datos simulacion</a>
     </nav>
   </header>
+
+  <h3 style="padding: 20px;">📊 Resultados con datos reales</h3>
+
   <body>
-    <div class="section">
-      <h2>📊 Datos Reales Calculados</h2>
+
+    
+    <div class="container-sections">
+
+       <div class="section">
+      <h2>📊 Datos Reales Calculados</h2> <br><br>
       <div style="display: flex; justify-content: space-between; gap: 2rem">
         <!-- Columna izquierda: Entradas -->
         <div style="flex: 1">
@@ -91,6 +107,11 @@
       <div id="resultadosotros"></div>
     </div>
 
+
+    </div>
+
+   
+
     <script>
       let datosReales = {
         tasaLlegada_lambda: 0,
@@ -110,9 +131,9 @@
           datosReales.mu = mu;
           datosReales.c = c;
 
-          document.getElementById("datosRealesEntradas").innerHTML = `
-      <p><strong>λ (Tasa de llegada):</strong> ${lambda.toFixed(4)}</p>
-      <p><strong>μ (Tasa de servicio):</strong> ${mu.toFixed(4)}</p>
+          document.getElementById("datosRealesEntradas").innerHTML = `<br>
+      <p><strong>λ (Tasa de llegada):</strong> ${lambda.toFixed(4)}</p> <br>
+      <p><strong>μ (Tasa de servicio):</strong> ${mu.toFixed(4)}</p> <br>
       <p><strong>c (Servidores):</strong> ${c}</p>
     `;
 
@@ -152,7 +173,7 @@
         } catch (error) {
           console.error("Error al cargar métricas reales:", error);
           document.getElementById("datosRealesEntradas").innerHTML =
-            "<p>Error al cargar datos reales.</p>";
+            "<p><br>Error al cargar datos reales.</p>";
           document.getElementById("datosRealesResultados").innerHTML = "";
         }
       }

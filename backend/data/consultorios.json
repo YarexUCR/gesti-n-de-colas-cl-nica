@@ -1,25 +1,19 @@
 [
   {
     "id": 1,
-    "nombre": "Consultorio 1",
+    "nombre": "consultorio1",
     "estado": "ocupado",
     "idDoctor": 3
   },
   {
     "id": 2,
-    "nombre": "Consultorio 2",
-    "estado": "ocupado",
-    "idDoctor": 4
-  },
-  {
-    "id": 3,
-    "nombre": "Consultorio 3",
+    "nombre": "consultorio2",
     "estado": "libre",
     "idDoctor": null
   },
   {
-    "id": 4,
-    "nombre": "Consultorio 4",
+    "id": 3,
+    "nombre": "consultorio3",
     "estado": "libre",
     "idDoctor": null
   }

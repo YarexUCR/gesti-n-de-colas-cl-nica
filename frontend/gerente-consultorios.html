@@ -5,15 +5,96 @@
   <meta charset="UTF-8" />
   <title>Gestión de Consultorios</title>
   <style>
-       body { font-family: Arial; margin: 0; }
-    header { background:#2c3e50; color:white; padding:15px; }
-    nav { display:flex; justify-content:space-between; align-items:center; }
-    nav a { color:white; margin-right:20px; text-decoration: none; font-weight: bold; }
-    .content { padding: 20px; }
-    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-    th, td { padding: 10px; border: 1px solid #ccc; }
-    th { background-color: #ecf0f1; }
-    input, button { padding: 8px; margin: 5px; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial;
+      margin: 0;
+    }
+
+    header {
+      color: white;
+      padding: 15px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    nav a {
+      color: white;
+      margin-right: 20px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .tabla-contenedor {
+      max-width: 1400px;
+      overflow-x: hidden;
+      margin: 0 auto;
+    }
+
+    table {
+      margin: 50px;
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      border-radius: 15px;
+    }
+
+    th, td {
+      padding: 10px;
+      border: 1px solid #ccc;
+    }
+
+    th {
+      background-color: #ecf0f1;
+    }
+
+    .content-formmulario {
+      max-width: 1325px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #f9f9f9;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    input,
+    select,
+    button {
+      padding: 10px 15px;
+      margin: 10px 5px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: #764ba2;
+      box-shadow: 0 0 5px rgba(118, 75, 162, 0.5);
+    }
+
+    button {
+      background-color: #667eea;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #5a67d8;
+    }
   </style>
 </head>
 <body>
@@ -23,28 +104,27 @@
       <div style="display: flex; gap: 10px;">
         <a href="gerente-usuarios.html">Usuarios</a>
         <a href="gerente-consultorios.html">Consultorios</a>
-        <div style="position: relative;">
-          <a href="#" onclick="toggleSubmenu(event)">Resultados ▾</a>
-          <div id="submenu" style="display: none; margin-left: 15px;">
-            <a href="calculos-datos-reales.html"> Resultados Reales</a><br>
-            <a href="calculos-simulacion.html">calculadora</a>
-          </div>
-      </div>
+        <a href="calculos-datos-reales.html">Resultados datos reales</a>
+        <a href="calculos-simulacion.html">Resultados datos simulacion</a>
       </div>
     </nav>
   </header>
 
-  <h3>🏥 Gestión de Consultorios</h3>
+  <h3 style="padding: 20px;">🏥 Gestión de Consultorios</h3>
 
-  <input id="nombreConsultorio" placeholder="Nombre del consultorio">
-  <button onclick="crearConsultorio()">Agregar</button>
+  <div class="content-formmulario">
+    <input id="nombreConsultorio" placeholder="Nombre del consultorio">
+    <button onclick="crearConsultorio()">Agregar</button>
+  </div>
 
-  <table id="tablaConsultorios">
-    <thead>
-      <tr><th>ID</th><th>Nombre</th><th>Estado</th><th>Acción</th></tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+  <div class="tabla-contenedor">
+    <table id="tablaConsultorios">
+      <thead>
+        <tr><th>ID</th><th>Nombre</th><th>Estado</th><th>Acción</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
 
   <script>
     async function cargarConsultorios() {
@@ -94,16 +174,6 @@
     }
 
     cargarConsultorios();
-
-
-    
-  function toggleSubmenu(event) {
-    event.preventDefault(); // evita que el href="#" recargue la página
-    const submenu = document.getElementById('submenu');
-    submenu.style.display = submenu.style.display === 'none' ? 'block' : 'none';
-  }
-
-
   </script>
 </body>
 </html>

@@ -34,5 +34,17 @@
     "usuario": "doctor4",
     "clave": "1234",
     "rol": "doctor"
+  },
+  {
+    "id": 7,
+    "usuario": "Alejandro",
+    "clave": "1234",
+    "rol": "doctor"
+  },
+  {
+    "id": 8,
+    "usuario": "as",
+    "clave": "as",
+    "rol": "doctor"
   }
 ]

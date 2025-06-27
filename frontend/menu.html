@@ -5,11 +5,36 @@
   <meta charset="UTF-8" />
   <title>Panel del Gerente</title>
   <style>
+    
     body { font-family: Arial; margin: 0; }
-    header { background:#2c3e50; color:white; padding:15px; ; }
+    header { background:#2c3e50; 
+      color:white;
+       padding:15px; 
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      }
     nav { display:flex; justify-content:space-between; align-items:center; }
     nav a { color:white; margin-right:20px; text-decoration: none; font-weight: bold; }
-    .content { padding: 20px; }
+    .content-menu { 
+     
+      height: 100vh;
+      padding: 20px;
+      margin-top: -200px;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+
+     }
+
+      .content-menu h3 {
+        font-size: 38px;
+        color:rgb(73, 73, 73);
+        margin-bottom: 10px;
+      }
+     
+    
   </style>
 </head>
 <body>
@@ -19,17 +44,14 @@
       <div style="display: flex; gap: 10px;">
         <a href="gerente-usuarios.html">Usuarios</a>
         <a href="gerente-consultorios.html">Consultorios</a>
-        <div style="position: relative;">
-          <a href="#" onclick="toggleSubmenu(event)">Resultados ▾</a>
-          <div id="submenu" style="display: none; margin-left: 15px;">
-            <a href="calculos-datos-reales.html"> Resultados Reales</a><br>
-            <a href="calculos-simulacion.html">calculadora</a>
-          </div>
+        <a href="calculos-datos-reales.html">Resultados datos reales</a>
+        <a  href="calculos-simulacion.html">Resultados datos simulacion</a>
+        
       </div>
       </div>
     </nav>
   </header>
-  <div class="content">
+  <div class="content-menu">
     <h3>Bienvenido al sistema de administración</h3>
     <p>Seleccione una opción en el menú superior para gestionar usuarios o consultorios.</p>
   </div>
