@@ -15,10 +15,6 @@ app.use('/api', require('./routes/metricas'));
 //app.use('/api', require('./routes/eventos'));
 //app.use('/api', require('./routes/informes'));
 
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/login.html'));
-});
-
 
 app.listen(PORT, () => {
   console.log(`Servidor iniciado en http://localhost:${PORT}/login.html`);
