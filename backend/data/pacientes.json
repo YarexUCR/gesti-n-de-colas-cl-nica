@@ -3,9 +3,11 @@
     "id": 7,
     "nombre": "Choy",
     "horaIngresoHospital": "2025-06-27T05:36:35.898Z",
-    "estado": "esperando",
-    "horaIngresoConsultorio": null,
-    "horaSalidaConsultorio": null
+    "estado": "en consulta",
+    "horaIngresoConsultorio": "2025-06-27T21:03:40.246Z",
+    "horaSalidaConsultorio": null,
+    "consultorioAsignado": 2,
+    "doctorAsignado": 4
   },
   {
     "id": 8,
