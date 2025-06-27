@@ -8,7 +8,7 @@
   {
     "id": 2,
     "nombre": "consultorio2",
-    "estado": "libre",
-    "idDoctor": null
+    "estado": "ocupado",
+    "idDoctor": 4
   }
 ]
