@@ -2,115 +2,461 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <title>Simulación M/M/c</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Datos Reales M/M/c</title>
     <style>
       * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
       body {
-        font-family: Arial, sans-serif;
- 
-        background: #f9f9f9;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        color: #333;
       }
-      .section {
-        margin: 50px 20px;
-        margin-bottom: 2rem;
-        padding: 1rem;
-        background: #fff;
-        border-radius: 10px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        width: 100%;
+
+      header {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        color: white;
+        padding: 15px;
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
       }
-      h2 {
-        margin-top: 0;
+
+      nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 1200px;
+        margin: 0 auto;
       }
-      label {
+
+      nav a {
+        color: white;
+        margin-right: 20px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        padding: 8px 16px;
+        border-radius: 20px;
+      }
+
+      nav a:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-2px);
+      }
+
+      .page-title {
+        text-align: center;
+        color: white;
+        padding: 15px 20px;
+        font-size: 2rem;
+        font-weight: 300;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 10px 20px;
+      }
+
+      .form-container {
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+      }
+
+      .form-container:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+      }
+
+      .form-title {
+        font-size: 1.8rem;
+        margin-bottom: 25px;
+        color: #2c3e50;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
         display: block;
-        margin-top: 1rem;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #34495e;
+        font-size: 1rem;
       }
-      input {
+
+      .form-group input {
         width: 100%;
-        padding: 5px;
+        padding: 12px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: #f8f9fa;
+      }
+
+      .form-group input:focus {
+        outline: none;
+        border-color: #667eea;
+        background: white;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      }
+
+      .form-group .help-text {
+        font-size: 0.85rem;
+        color: #7f8c8d;
         margin-top: 5px;
+        font-style: italic;
       }
-      button {
-        margin-top: 1rem;
-        padding: 0.5rem 1rem;
+
+      .btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 25px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-right: 10px;
+        margin-bottom: 10px;
       }
-      body { font-family: Arial; margin: 0; }
-    header { background:#2c3e50; color:white; padding:15px;  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-    nav { display:flex; justify-content:space-between; align-items:center; }
-    nav a { color:white; margin-right:20px; text-decoration: none; font-weight: bold; }
-    .content { padding: 20px; }
 
-    .container-sections {
-      display: flex;
-      justify-content: center;
-     
-    }
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+      }
 
+      .btn:active {
+        transform: translateY(0);
+      }
+
+      .loading {
+        display: none;
+        text-align: center;
+        padding: 20px;
+      }
+
+      .spinner {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #667eea;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 15px;
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      .results {
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        margin-top: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        display: none;
+      }
+
+      .result-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 15px 0;
+        border-bottom: 1px solid #ecf0f1;
+        transition: all 0.3s ease;
+      }
+
+      .result-item:hover {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding-left: 15px;
+        padding-right: 15px;
+        margin-left: -15px;
+        margin-right: -15px;
+      }
+
+      .result-item:last-child {
+        border-bottom: none;
+      }
+
+      .result-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 600;
+        color: #2c3e50;
+      }
+
+      .result-value {
+        font-weight: 500;
+        color: #34495e;
+      }
+
+      .tooltip {
+        position: relative;
+        display: inline-block;
+        cursor: help;
+      }
+
+      .tooltip .tooltiptext {
+        visibility: hidden;
+        width: 250px;
+        background-color: #2c3e50;
+        color: white;
+        text-align: center;
+        border-radius: 8px;
+        padding: 10px;
+        position: absolute;
+        z-index: 1;
+        bottom: 125%;
+        left: 50%;
+        margin-left: -125px;
+        opacity: 0;
+        transition: opacity 0.3s;
+        font-size: 0.85rem;
+        line-height: 1.4;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      }
+
+      .tooltip .tooltiptext::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: #2c3e50 transparent transparent transparent;
+      }
+
+      .tooltip:hover .tooltiptext {
+        visibility: visible;
+        opacity: 1;
+      }
+
+      .progress-bar {
+        width: 200px;
+        height: 20px;
+        background-color: #ecf0f1;
+        border-radius: 10px;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .progress-fill {
+        height: 100%;
+        border-radius: 10px;
+        transition: width 0.5s ease;
+        position: relative;
+      }
+
+      .progress-fill::after {
+        content: attr(data-percentage);
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: white;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+      }
+
+      .progress-gray { background: linear-gradient(90deg, #95a5a6, #7f8c8d); }
+      .progress-green { background: linear-gradient(90deg, #27ae60, #2ecc71); }
+      .progress-yellow { background: linear-gradient(90deg, #f39c12, #f1c40f); }
+      .progress-red { background: linear-gradient(90deg, #e74c3c, #c0392b); }
+
+      .table-container {
+        overflow-x: auto;
+        margin-top: 20px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      th, td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #ecf0f1;
+      }
+
+      th {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        font-weight: 600;
+      }
+
+      tr:hover {
+        background: #f8f9fa;
+      }
+
+      .error {
+        background: #e74c3c;
+        color: white;
+        padding: 15px;
+        border-radius: 10px;
+        margin: 20px 0;
+        text-align: center;
+      }
+
+      .data-section {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        margin-bottom: 30px;
+      }
+
+      .data-card {
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+      }
+
+      .data-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+      }
+
+      .data-card h3 {
+        color: #2c3e50;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      @media (max-width: 768px) {
+        nav {
+          flex-direction: column;
+          gap: 15px;
+        }
+
+        nav a {
+          margin-right: 0;
+        }
+
+        .page-title {
+          font-size: 2rem;
+        }
+
+        .container {
+          padding: 10px;
+        }
+
+        .form-container {
+          padding: 20px;
+        }
+
+        .form-title {
+          font-size: 1.5rem;
+        }
+
+        .result-item {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 10px;
+        }
+
+        .progress-bar {
+          width: 100%;
+        }
+
+        .tooltip .tooltiptext {
+          width: 200px;
+          margin-left: -100px;
+        }
+
+        .data-section {
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+      }
     </style>
   </head>
-  <header>
-    <nav>
-      <h2 style="margin:0;"><a href="menu.html">Panel del Gerente</a></h2>
-      <div style="display: flex; gap: 10px;">
-         <a href="gerente-usuarios.html">Usuarios</a>
-        <a href="gerente-consultorios.html">Consultorios</a>
-        <a href="calculos-datos-reales.html">Resultados datos reales</a>
-        <a href="calculos-simulacion.html">Resultados datos simulacion</a>
-    </nav>
-  </header>
-
-  <h3 style="padding: 20px;">📊 Resultados con datos reales</h3>
-
   <body>
+    <header>
+      <nav>
+        <h2 style="margin: 0"><a href="menu.html">Panel del Gerente</a></h2>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <a href="gerente-usuarios.html">Usuarios</a>
+          <a href="gerente-consultorios.html">Consultorios</a>
+          <a href="calculos-datos-reales.html">Resultados datos reales</a>
+          <a href="calculos-simulacion.html">Resultados datos simulación</a>
+        </div>
+      </nav>
+    </header>
 
-    
-    <div class="container-sections">
+    <h1 class="page-title">📊 Resultados con datos reales</h1>
 
-       <div class="section">
-      <h2>📊 Datos Reales Calculados</h2> <br><br>
-      <div style="display: flex; justify-content: space-between; gap: 2rem">
-        <!-- Columna izquierda: Entradas -->
-        <div style="flex: 1">
-          <h3>🔢 Entradas</h3>
+    <div class="container">
+      <div class="data-section">
+        <div class="data-card">
+          <h3>🔢 Datos de Entrada</h3>
           <div id="datosRealesEntradas"></div>
         </div>
 
-        <!-- Columna derecha: Resultados -->
-        <div style="flex: 1">
-          <h3>📈 Resultados</h3>
+        <div class="data-card">
+          <h3>📈 Métricas Calculadas</h3>
           <div id="datosRealesResultados"></div>
         </div>
       </div>
+
+      <div class="form-container">
+        <h2 class="form-title">🔧 Cálculo del Número Óptimo de Servidores</h2>
+        
+        <form id="formOptimo">
+          <div class="form-group">
+            <label for="costo_espera">Costo de espera por cliente (₡)</label>
+            <input type="number" step="0.01" id="costo_espera" name="costo_espera" required>
+            <div class="help-text">Costo por hora que un cliente espera en la cola</div>
+          </div>
+          
+          <div class="form-group">
+            <label for="costo_servidor">Costo por servidor (₡)</label>
+            <input type="number" step="0.01" id="costo_servidor" name="costo_servidor" required>
+            <div class="help-text">Costo por hora de tener un doctor (servidor) activo</div>
+          </div>
+          
+          <button type="submit" class="btn">⚡ Calcular Servidor Óptimo</button>
+        </form>
+
+        <div id="loading" class="loading">
+          <div class="spinner"></div>
+          <p>Calculando métricas...</p>
+        </div>
+
+        <div id="resultadoOptimo" class="results"></div>
+        <div id="resultadosotros" class="table-container"></div>
+      </div>
     </div>
-
-    <div class="section">
-      <h2>🔧 Cálculo del Número Óptimo de Servidores</h2>
-      <form id="formOptimo">
-   
-        <label
-          >Costo de espera por cliente (₡):
-          <input type="number" step="0.01" name="costo_espera" required
-        /></label>
-        <label
-          >Costo por servidor (₡):
-          <input type="number" step="0.01" name="costo_servidor" required
-        /></label>
-        <button type="submit">Calcular Servidor Óptimo</button>
-      </form>
-      <div id="resultadoOptimo"></div>
-      <div id="resultadosotros"></div>
-    </div>
-
-
-    </div>
-
-   
 
     <script>
       let datosReales = {
@@ -118,6 +464,36 @@
         tasaServicio_mu: 0,
         servidores_c: 0,
       };
+
+      function showLoading() {
+        document.getElementById('loading').style.display = 'block';
+        document.getElementById('resultadoOptimo').style.display = 'none';
+      }
+
+      function hideLoading() {
+        document.getElementById('loading').style.display = 'none';
+      }
+
+      function formatTime(minutes) {
+        const hours = Math.floor(minutes / 60);
+        const mins = Math.round(minutes % 60);
+        if (hours > 0) {
+          return `${hours}h ${mins}min`;
+        }
+        return `${mins}min`;
+      }
+
+      function getProgressBarColor(percentage) {
+        if (percentage >= 85) return 'progress-red';
+        if (percentage >= 70) return 'progress-yellow';
+        if (percentage >= 50) return 'progress-green';
+        return 'progress-gray';
+      }
+
+      function createTooltip(text) {
+        return `<span class="tooltip">ℹ️<span class="tooltiptext">${text}</span></span>`;
+      }
+
       async function cargarDatosReales() {
         try {
           const res = await fetch("/api/metricas/entradas-mmc");
@@ -131,11 +507,28 @@
           datosReales.mu = mu;
           datosReales.c = c;
 
-          document.getElementById("datosRealesEntradas").innerHTML = `<br>
-      <p><strong>λ (Tasa de llegada):</strong> ${lambda.toFixed(4)}</p> <br>
-      <p><strong>μ (Tasa de servicio):</strong> ${mu.toFixed(4)}</p> <br>
-      <p><strong>c (Servidores):</strong> ${c}</p>
-    `;
+          document.getElementById("datosRealesEntradas").innerHTML = `
+            <div class="result-item">
+              <div class="result-label">
+                λ (Tasa de llegada) ${createTooltip('Número promedio de pacientes que llegan por hora.')}
+              </div>
+              <div class="result-value">${lambda.toFixed(4)} clientes/hora</div>
+            </div>
+            
+            <div class="result-item">
+              <div class="result-label">
+                μ (Tasa de servicio) ${createTooltip('Número promedio de pacientes que puede atender cada doctor por hora.')}
+              </div>
+              <div class="result-value">${mu.toFixed(4)} clientes/hora</div>
+            </div>
+            
+            <div class="result-item">
+              <div class="result-label">
+                c (Servidores) ${createTooltip('Número total de doctores disponibles en el sistema.')}
+              </div>
+              <div class="result-value">${c} servidores</div>
+            </div>
+          `;
 
           // Llamar a la API Flask con estos valores reales
           const mmcResponse = await fetch("https://queuingtheorycalculatorapi.onrender.com/api/colas", {
@@ -151,35 +544,87 @@
           const mmcData = await mmcResponse.json();
 
           if (mmcData.error) {
-            document.getElementById(
-              "datosRealesResultados"
-            ).innerHTML = `<p style="color:red;">${mmcData.error}</p>`;
+            document.getElementById("datosRealesResultados").innerHTML = `<div class="error">${mmcData.error}</div>`;
           } else {
-
             datosReales.mu = mmcData.mu;
-
+            
+            const rhoPercentage = (mmcData.rho * 100).toFixed(1);
+            const progressClass = getProgressBarColor(rhoPercentage);
 
             document.getElementById("datosRealesResultados").innerHTML = `
-        <p><strong>ρ (Utilización):</strong> ${mmcData.rho}</p>
-        <p><strong>p₀ (Sistema vacío):</strong> ${mmcData.p0}</p>
-        <p><strong>L (Clientes en sistema):</strong> ${mmcData.L}</p>
-        <p><strong>Lq (Clientes en cola):</strong> ${mmcData.Lq}</p>
-        <p><strong>W (Tiempo total - min):</strong> ${mmcData.W}</p>
-        <p><strong>Wq (Espera en cola - min):</strong> ${mmcData.Wq}</p>
-        <p><strong>mu (Tiempo de servicio promedio):</strong> ${mmcData.mu}</p>
-        <p><strong>Recomendación:</strong> ${mmcData.recomendacion}</p>
-      `;
+              <div class="result-item">
+                <div class="result-label">
+                  Capacidad del sistema (ρ) ${createTooltip('Factor de utilización del sistema. Indica qué porcentaje del tiempo están ocupados los servidores (doctores).')}
+                </div>
+                <div class="result-value">
+                  ${rhoPercentage}%
+                  <div class="progress-bar">
+                    <div class="progress-fill ${progressClass}" style="width: ${rhoPercentage}%" data-percentage="${rhoPercentage}%"></div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="result-item">
+                <div class="result-label">
+                  Probabilidad de sistema vacío (P₀) ${createTooltip('Probabilidad de que el sistema esté completamente vacío (sin clientes).')}
+                </div>
+                <div class="result-value">${(mmcData.p0 * 100).toFixed(1)}% (${mmcData.p0})</div>
+              </div>
+              
+              <div class="result-item">
+                <div class="result-label">
+                  Pacientes esperando en la cola (Lq) ${createTooltip('Número promedio de clientes esperando en la cola. Personas que esperan sin ser atendidas.')}
+                </div>
+                <div class="result-value">${Math.round(mmcData.Lq)} (${mmcData.Lq})</div>
+              </div>
+              
+              <div class="result-item">
+                <div class="result-label">
+                  Promedio de clientes en el sistema (L) ${createTooltip('Número promedio total de clientes en el sistema (en cola + siendo atendidos).')}
+                </div>
+                <div class="result-value">${mmcData.L}</div>
+              </div>
+              
+              <div class="result-item">
+                <div class="result-label">
+                  Tiempo que un cliente espera en la cola (Wq) ${createTooltip('Tiempo promedio que un cliente espera en la cola antes de ser atendido.')}
+                </div>
+                <div class="result-value">${formatTime(mmcData.Wq)}</div>
+              </div>
+              
+              <div class="result-item">
+                <div class="result-label">
+                  Tiempo que un cliente está en el sistema (W) ${createTooltip('Tiempo total promedio que un cliente permanece en el sistema (espera + servicio).')}
+                </div>
+                <div class="result-value">${formatTime(mmcData.W)}</div>
+              </div>
+              
+              <div class="result-item">
+                <div class="result-label">
+                  Tasa de servicio por servidor (μ) ${createTooltip('Cantidad promedio de pacientes que un solo servidor (doctor) puede atender por hora.')}
+                </div>
+                <div class="result-value">${Math.round(mmcData.mu)} (${mmcData.mu})</div>
+              </div>
+              
+              <div class="result-item">
+                <div class="result-label">
+                  Recomendación ${createTooltip('Sugerencia basada en la utilización del sistema.')}
+                </div>
+                <div class="result-value">${mmcData.recomendacion}</div>
+              </div>
+            `;
           }
         } catch (error) {
           console.error("Error al cargar métricas reales:", error);
-          document.getElementById("datosRealesEntradas").innerHTML =
-            "<p><br>Error al cargar datos reales.</p>";
+          document.getElementById("datosRealesEntradas").innerHTML = `<div class="error">Error al cargar datos reales: ${error.message}</div>`;
           document.getElementById("datosRealesResultados").innerHTML = "";
         }
       }
 
       async function calcularOptimo(event) {
         event.preventDefault();
+        showLoading();
+        
         const form = event.target;
         const valores = {
           tasa_llegada: datosReales.lambda,
@@ -196,75 +641,103 @@
           });
 
           const data = await res.json();
+          hideLoading();
+          
           if (data.error) {
-            document.getElementById(
-              "resultadoOptimo"
-            ).innerHTML = `<p style="color:red;">${data.error}</p>`;
+            document.getElementById("resultadoOptimo").innerHTML = `<div class="error">${data.error}</div>`;
+            document.getElementById("resultadoOptimo").style.display = 'block';
             return;
           }
 
           const opt = data.optimo;
+          const rhoPercentage = (opt.rho * 100).toFixed(1);
+          const progressClass = getProgressBarColor(rhoPercentage);
+          
           document.getElementById("resultadoOptimo").innerHTML = `
-          <p><strong>Servidores óptimos:</strong> ${opt.servidores}</p>
-          <p><strong>Lq:</strong> ${opt.Lq}</p>
-          <p><strong>Wq (min):</strong> ${opt.Wq}</p>
-          <p><strong>ρ:</strong> ${opt.rho}</p>
-          <p><strong>Costo total:</strong> ₡${opt.costo_total}</p>
-        `;
+            <div class="result-item">
+              <div class="result-label">
+                Servidores óptimos ${createTooltip('Número de doctores (servidores) que minimiza el costo total del sistema.')}
+              </div>
+              <div class="result-value">${opt.servidores}</div>
+            </div>
+            
+            <div class="result-item">
+              <div class="result-label">
+                Pacientes en cola (Lq) ${createTooltip('Número promedio de pacientes en cola con la configuración óptima.')}
+              </div>
+              <div class="result-value">${opt.Lq}</div>
+            </div>
+            
+            <div class="result-item">
+              <div class="result-label">
+                Tiempo de espera en cola (Wq) ${createTooltip('Tiempo promedio de espera en cola con la configuración óptima.')}
+              </div>
+              <div class="result-value">${formatTime(opt.Wq)}</div>
+            </div>
+            
+            <div class="result-item">
+              <div class="result-label">
+                Capacidad del sistema (ρ) ${createTooltip('Factor de utilización con la configuración óptima.')}
+              </div>
+              <div class="result-value">
+                ${rhoPercentage}%
+                <div class="progress-bar">
+                  <div class="progress-fill ${progressClass}" style="width: ${rhoPercentage}%" data-percentage="${rhoPercentage}%"></div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="result-item">
+              <div class="result-label">
+                Costo total ${createTooltip('Costo total por hora: (costo de espera × tiempo de espera × tasa de llegada) + (costo por servidor × número de servidores).')}
+              </div>
+              <div class="result-value">₡${opt.costo_total}</div>
+            </div>
+          `;
+          
+          document.getElementById("resultadoOptimo").style.display = 'block';
 
           const opciones = data.todas_las_opciones;
-
           let tablaHTML = `
-  <table border="1">
-    <thead>
-      <tr>
-        <th>Servidores</th>
-        <th>Lq</th>
-        <th>Wq (min)</th>
-        <th>ρ</th>
-        <th>Costo total (₡)</th>
-      </tr>
-    </thead>
-    <tbody>
-`;
+            <h3 style="margin: 20px 0; color: #2c3e50;">📊 Comparación de todas las opciones</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Servidores</th>
+                  <th>Lq</th>
+                  <th>Wq</th>
+                  <th>ρ</th>
+                  <th>Costo total (₡)</th>
+                </tr>
+              </thead>
+              <tbody>
+          `;
 
           opciones.forEach((op) => {
+            const isOptimal = op.servidores === opt.servidores;
             tablaHTML += `
-    <tr>
-      <td>${op.servidores}</td>
-      <td>${op.Lq}</td>
-      <td>${op.Wq}</td>
-      <td>${op.rho}</td>
-      <td>₡${op.costo_total}</td>
-    </tr>
-  `;
+              <tr ${isOptimal ? 'style="background: #e8f5e8; font-weight: 600;"' : ''}>
+                <td>${op.servidores} ${isOptimal ? '⭐' : ''}</td>
+                <td>${op.Lq}</td>
+                <td>${formatTime(op.Wq)}</td>
+                <td>${(op.rho * 100).toFixed(1)}%</td>
+                <td>₡${op.costo_total}</td>
+              </tr>
+            `;
           });
 
           tablaHTML += `</tbody></table>`;
           document.getElementById("resultadosotros").innerHTML = tablaHTML;
 
         } catch (error) {
-          document.getElementById("resultadoOptimo").innerHTML =
-            "Error al calcular óptimo.";
-            document.getElementById("resultadoOptimo").innerHTML = "Error al calcular óptimo.";;
-
+          hideLoading();
+          document.getElementById("resultadoOptimo").innerHTML = `<div class="error">Error al calcular óptimo: ${error.message}</div>`;
+          document.getElementById("resultadoOptimo").style.display = 'block';
         }
       }
 
-      document
-        .getElementById("formOptimo")
-        .addEventListener("submit", calcularOptimo);
+      document.getElementById("formOptimo").addEventListener("submit", calcularOptimo);
       cargarDatosReales();
-
-    
-  function toggleSubmenu(event) {
-    event.preventDefault(); // evita que el href="#" recargue la página
-    const submenu = document.getElementById('submenu');
-    submenu.style.display = submenu.style.display === 'none' ? 'block' : 'none';
-  }
-
-
-
     </script>
   </body>
 </html>
