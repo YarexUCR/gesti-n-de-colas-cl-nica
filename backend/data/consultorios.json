@@ -2,13 +2,13 @@
   {
     "id": 1,
     "nombre": "consultorio1",
-    "estado": "libre",
-    "idDoctor": null
+    "estado": "ocupado",
+    "idDoctor": 1
   },
   {
     "id": 2,
     "nombre": "consultorio2",
-    "estado": "libre",
-    "idDoctor": null
+    "estado": "ocupado",
+    "idDoctor": 2
   }
 ]
