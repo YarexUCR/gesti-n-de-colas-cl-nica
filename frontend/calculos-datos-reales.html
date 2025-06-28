@@ -582,7 +582,7 @@
                 <div class="result-label">
                   Promedio de clientes en el sistema (L) ${createTooltip('Número promedio total de clientes en el sistema (en cola + siendo atendidos).')}
                 </div>
-                <div class="result-value">${mmcData.L}</div>
+                <div class="result-value">${Math.round(mmcData.L)} (${mmcData.L})</div>
               </div>
               
               <div class="result-item">
@@ -601,7 +601,7 @@
               
               <div class="result-item">
                 <div class="result-label">
-                  Tasa de servicio por servidor (μ) ${createTooltip('Cantidad promedio de pacientes que un solo servidor (doctor) puede atender por hora.')}
+                  Tasa de servicio por servidor (μ) ${createTooltip('Cantidad promedio de pacientes que un solo doctor (servidor) puede atender por hora.')}
                 </div>
                 <div class="result-value">${Math.round(mmcData.mu)} (${mmcData.mu})</div>
               </div>
