@@ -496,8 +496,24 @@
 
       async function cargarDatosReales() {
         try {
+          console.log("Iniciando carga de datos reales...");
+          
           const res = await fetch("/api/metricas/entradas-mmc");
+          console.log("Respuesta del servidor:", res.status, res.statusText);
+          
+          if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status} - ${res.statusText}`);
+          }
+          
+          const contentType = res.headers.get("content-type");
+          if (!contentType || !contentType.includes("application/json")) {
+            const textResponse = await res.text();
+            console.error("Respuesta no es JSON:", textResponse.substring(0, 200));
+            throw new Error("El servidor no devolvió JSON válido");
+          }
+          
           const data = await res.json();
+          console.log("Datos recibidos:", data);
 
           const lambda = parseFloat(data.tasaLlegada_lambda);
           const mu = parseFloat(data.tasaServicio_mu);
@@ -531,6 +547,8 @@
           `;
 
           // Llamar a la API Flask con estos valores reales
+          console.log("Enviando datos a API externa:", { tasa_llegada: lambda, tiempo_servicio: mu, servidores: c });
+          
           const mmcResponse = await fetch("https://queuingtheorycalculatorapi.onrender.com/api/colas", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -541,7 +559,12 @@
             }),
           });
 
+          if (!mmcResponse.ok) {
+            throw new Error(`Error en API externa: ${mmcResponse.status} - ${mmcResponse.statusText}`);
+          }
+
           const mmcData = await mmcResponse.json();
+          console.log("Respuesta de API externa:", mmcData);
 
           if (mmcData.error) {
             document.getElementById("datosRealesResultados").innerHTML = `<div class="error">${mmcData.error}</div>`;
@@ -616,7 +639,18 @@
           }
         } catch (error) {
           console.error("Error al cargar métricas reales:", error);
-          document.getElementById("datosRealesEntradas").innerHTML = `<div class="error">Error al cargar datos reales: ${error.message}</div>`;
+          console.error("Stack trace:", error.stack);
+          
+          let errorMessage = "Error al cargar datos reales";
+          if (error.message.includes("404")) {
+            errorMessage = "Error 404: El endpoint /api/metricas/entradas-mmc no existe. Verifique que el servidor backend esté ejecutándose.";
+          } else if (error.message.includes("JSON")) {
+            errorMessage = "Error: El servidor no devolvió datos JSON válidos. Verifique la configuración del backend.";
+          } else {
+            errorMessage = `Error: ${error.message}`;
+          }
+          
+          document.getElementById("datosRealesEntradas").innerHTML = `<div class="error">${errorMessage}</div>`;
           document.getElementById("datosRealesResultados").innerHTML = "";
         }
       }
