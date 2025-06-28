@@ -1,269 +1,864 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulación M/M/c</title>
     <style>
         * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-      body {
-        font-family: Arial, sans-serif;
-       
-        background: #f9f9f9;
-      }
-      .section {
-        margin: 50px 20px;
-        margin-bottom: 2rem;
-        padding: 1rem;
-        background: #fff;
-        border-radius: 10px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        width: 100%;
-      }
-      h2 {
-        margin-top: 0;
-      }
-      label {
-        display: block;
-        margin-top: 1rem;
-      }
-      input {
-        width: 100%;
-        padding: 5px;
-        margin-top: 5px;
-      }
-      button {
-        margin-top: 1rem;
-        padding: 0.5rem 1rem;
-      }
-      body {
-        font-family: Arial;
-        margin: 0;
-      }
-      header {
-        background: #2c3e50;
-        color: white;
-        padding: 15px;
-         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      }
-      nav {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-      nav a {
-        color: white;
-        margin-right: 20px;
-        text-decoration: none;
-        font-weight: bold;
-      }
-      .content {
-        padding: 20px;
-      }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
 
-      .container-sections {
-        display: flex;
-       justify-content: center;
-       
-      }
+        header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 015px;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        nav a {
+            color: white;
+            margin-right: 20px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 8px 16px;
+            border-radius: 20px;
+        }
+
+        nav a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .page-title {
+            text-align: center;
+            color: white;
+            padding: 15px 20px;
+            font-size: 2rem;
+            font-weight: 300;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .forms-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-container {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .form-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .form-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .current-data-display {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .current-data-display h4 {
+            color: #495057;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .data-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .data-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .data-label {
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .data-value {
+            color: #6c757d;
+            font-weight: 500;
+        }
+
+        .no-data-message {
+            color: #6c757d;
+            font-style: italic;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #34495e;
+            font-size: 1rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group .help-text {
+            font-size: 0.85rem;
+            color: #7f8c8d;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+        }
+
+        .btn-secondary:hover {
+            box-shadow: 0 5px 15px rgba(149, 165, 166, 0.4);
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .results {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+        .result-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid #ecf0f1;
+            transition: all 0.3s ease;
+        }
+
+        .result-item:hover {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding-left: 15px;
+            padding-right: 15px;
+            margin-left: -15px;
+            margin-right: -15px;
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .result-value {
+            font-weight: 500;
+            color: #34495e;
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 250px;
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            border-radius: 8px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -125px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .tooltip .tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #2c3e50 transparent transparent transparent;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .progress-bar {
+            width: 200px;
+            height: 20px;
+            background-color: #ecf0f1;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: attr(data-percentage);
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .progress-gray {
+            background: linear-gradient(90deg, #95a5a6, #7f8c8d);
+        }
+
+        .progress-green {
+            background: linear-gradient(90deg, #27ae60, #2ecc71);
+        }
+
+        .progress-yellow {
+            background: linear-gradient(90deg, #f39c12, #f1c40f);
+        }
+
+        .progress-red {
+            background: linear-gradient(90deg, #e74c3c, #c0392b);
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        th,
+        td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .error {
+            background: #e74c3c;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .form-toggle {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .toggle-btn {
+            background: #ecf0f1;
+            color: #7f8c8d;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .toggle-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .form-section {
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            nav a {
+                margin-right: 0;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            .forms-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .form-container {
+                padding: 20px;
+            }
+
+            .form-title {
+                font-size: 1.5rem;
+            }
+
+            .result-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .progress-bar {
+                width: 100%;
+            }
+
+            .tooltip .tooltiptext {
+                width: 200px;
+                margin-left: -100px;
+            }
+        }
     </style>
-  </head>
-  <body>
+</head>
+
+<body>
     <header>
-      <nav>
-        <h2 style="margin: 0"><a href="menu.html">Panel del Gerente</a></h2>
-        <div style="display: flex; gap: 10px">
-           <a href="gerente-usuarios.html">Usuarios</a>
-        <a href="gerente-consultorios.html">Consultorios</a>
-        <a href="calculos-datos-reales.html">Resultados datos reales</a>
-        <a href="calculos-simulacion.html">Resultados datos simulacion</a>
-        </div>
-      </nav>
+        <nav>
+            <h2 style="margin: 0"><a href="menu.html">Panel del Gerente</a></h2>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <a href="gerente-usuarios.html">Usuarios</a>
+                <a href="gerente-consultorios.html">Consultorios</a>
+                <a href="calculos-datos-reales.html">Resultados datos reales</a>
+                <a href="calculos-simulacion.html">Resultados datos simulación</a>
+            </div>
+        </nav>
     </header>
 
-    <h3 style="padding: 20px;">📊 Resultados con datos simulados</h3>
+    <h1 class="page-title">📊 Resultados con datos simulados</h1>
 
-    <div class="container-sections">
-        <div class="section">
-          <h2>🧪 Simular Escenario Personalizado</h2>
-          <form id="formSimulacion">
-            <label
-              >Tasa de llegada (λ):
-              <input type="number" step="0.01" name="tasa_llegada" required
-            /></label>
-            <label
-              >Tiempo de servicio promedio (min):
-              <input type="number" step="0.01" name="tiempo_servicio" required
-            /></label>
-            <label
-              >Servidores (c): <input type="number" name="servidores" required
-            /></label>
-            <button type="submit">Calcular Métricas</button> 
-          </form>
-          <br>
-          <div id="resultadoSimulado"></div>
-        </div>
+    <div class="container">
+        <div class="forms-grid">
+            <!-- Formulario de Simulación -->
+            <div class="form-container">
+                <h2 class="form-title">🧪 Simular Escenario</h2>
 
-        <div class="section">
-          <h2>🔧 Cálculo del Número Óptimo de Servidores</h2>
-          <form id="formOptimo">
-            <label
-              >Costo de espera por cliente (₡):
-              <input type="number" step="0.01" name="costo_espera" required
-            /></label>
-            <label
-              >Costo por servidor (₡):
-              <input type="number" step="0.01" name="costo_servidor" required
-            /></label>
-            <button type="submit">Calcular Servidor Óptimo</button> <br>
-          </form>
-          <br>
-          <div id="resultadoOptimo"></div> <br>
-          <div id="otrosResuultados"></div>
+                <form id="formSimulacion">
+                    <div class="form-group">
+                        <label for="tasa_llegada">Tasa de llegada (λ) - Clientes por hora</label>
+                        <input type="number" step="0.01" id="tasa_llegada" name="tasa_llegada" required>
+                        <div class="help-text">Ejemplo: 10 significa 10 clientes que llegan por hora</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tiempo_servicio">Tiempo de servicio promedio - Minutos</label>
+                        <input type="number" step="0.01" id="tiempo_servicio" name="tiempo_servicio" required>
+                        <div class="help-text">Ejemplo: 15 significa cada servicio toma 15 minutos en promedio</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="servidores">Número de servidores (c)</label>
+                        <input type="number" id="servidores" name="servidores" required>
+                        <div class="help-text">Ejemplo: 3 significa hay 3 doctores (servidores) atendiendo
+                            simultáneamente</div>
+                    </div>
+
+                    <button type="submit" class="btn">🚀 Calcular Métricas</button>
+                </form>
+
+                <div id="loading" class="loading">
+                    <div class="spinner"></div>
+                    <p>Calculando métricas...</p>
+                </div>
+
+                <div id="resultadoSimulado" class="results"></div>
+            </div>
+
+            <!-- Formulario de Cálculo Óptimo -->
+            <div class="form-container">
+                <h2 class="form-title">🔧 Calcular Óptimo</h2>
+
+                <div class="current-data-display">
+                    <h4>📊 Datos del Escenario Actual</h4>
+                    <div id="current-data-content">
+                        <div class="no-data-message">Complete el formulario de simulación para ver los datos</div>
+                    </div>
+                </div>
+
+                <form id="formOptimo">
+                    <div class="form-group">
+                        <label for="costo_espera">Costo de espera por cliente (₡)</label>
+                        <input type="number" step="0.01" id="costo_espera" name="costo_espera" required>
+                        <div class="help-text">Costo por hora que un cliente espera en la cola</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="costo_servidor">Costo por servidor (₡)</label>
+                        <input type="number" step="0.01" id="costo_servidor" name="costo_servidor" required>
+                        <div class="help-text">Costo por hora de tener un doctor (servidor) activo</div>
+                    </div>
+
+                    <button type="submit" class="btn">⚡ Calcular Servidor Óptimo</button>
+                </form>
+
+                <div id="resultadoOptimo" class="results"></div>
+                <div id="otrosResuultados" class="table-container"></div>
+            </div>
         </div>
     </div>
 
-    
-
     <script>
-      let datosrepetidos = {
-        tasaLlegada_lambda: 0,
-        tasaServicio_mu: 0,
-        servidores_c: 0,
-      };
-
-      async function simular(event) {
-        event.preventDefault();
-        const form = event.target;
-
-        const valores = {
-          tasa_llegada: parseFloat(form.tasa_llegada.value),
-        tiempo_servicio: parseFloat(form.tiempo_servicio.value),
-          servidores: parseInt(form.servidores.value),
+        let datosrepetidos = {
+            tasaLlegada_lambda: 0,
+            tasaServicio_mu: 0,
+            servidores_c: 0,
         };
 
-        datosrepetidos.lambda = valores.tasa_llegada;
-        try {
-          const res = await fetch("https://queuingtheorycalculatorapi.onrender.com/api/colas", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(valores),
-          });
-          const data = await res.json();
-
-          if (data.error) {
-            document.getElementById(
-              "resultadoSimulado"
-            ).innerHTML = `<p style="color:red;">${data.error}</p>`;
-            return;
-          }
-          datosrepetidos.tasaServicio_mu = data.mu;
-          datosrepetidos.tasaLlegada_lambda = data.lambda;
-          document.getElementById("resultadoSimulado").innerHTML = `
-          <p><strong>ρ (Utilización):</strong> ${data.rho}</p>
-          <p><strong>P0:</strong> ${data.p0}</p>
-          <p><strong>Lq:</strong> ${data.Lq}</p>
-          <p><strong>Wq (min):</strong> ${data.Wq}</p>
-          <p><strong>W (min):</strong> ${data.W}</p>
-          <p><strong>L:</strong> ${data.L}</p>
-          <p><strong>mu (Tiempo de servicio promedio):</strong> ${data.mu}</p>
-          <p><strong>Recomendación:</strong> ${data.recomendacion}</p>
-        `;
-        } catch (error) {
-          document.getElementById("resultadoSimulado").innerHTML =
-            "Error al simular.";
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('resultadoSimulado').style.display = 'none';
         }
-      }
 
-      async function calcularOptimo(event) {
-        event.preventDefault();
-        const form = event.target;
-        const valores = {
-          tasa_llegada: datosrepetidos.tasaLlegada_lambda,
-          tiempo_servicio: datosrepetidos.tasaServicio_mu,
-          costo_espera: parseFloat(form.costo_espera.value),
-          costo_servidor: parseFloat(form.costo_servidor.value),
-        };
-
-        try {
-          const res = await fetch("https://queuingtheorycalculatorapi.onrender.com/api/colas/optimo", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(valores),
-          });
-
-          const data = await res.json();
-          if (data.error) {
-            document.getElementById(
-              "resultadoOptimo"
-            ).innerHTML = `<p style="color:red;">${data.error}</p>`;
-            return;
-          }
-
-          const opt = data.optimo;
-          document.getElementById("resultadoOptimo").innerHTML = `
-          <p><strong>Servidores óptimos:</strong> ${opt.servidores}</p>
-          <p><strong>Lq:</strong> ${opt.Lq}</p>
-          <p><strong>Wq (min):</strong> ${opt.Wq}</p>
-          <p><strong>ρ:</strong> ${opt.rho}</p>
-          <p><strong>Costo total:</strong> ₡${opt.costo_total}</p>
-          
-        `;
-          const opciones = data.todas_las_opciones;
-
-          let tablaHTML = `
-<table border="1">
-<thead>
-<tr>
-<th>Servidores</th>
-<th>Lq</th>
-<th>Wq (min)</th>
-<th>ρ</th>
-<th>Costo total (₡)</th>
-</tr>
-</thead>
-<tbody>
-`;
-
-          opciones.forEach((op) => {
-            tablaHTML += `
-<tr>
-<td>${op.servidores}</td>
-<td>${op.Lq}</td>
-<td>${op.Wq}</td>
-<td>${op.rho}</td>
-<td>₡${op.costo_total}</td>
-</tr>
-`;
-          });
-
-          tablaHTML += `</tbody></table>`;
-          document.getElementById("otrosResuultados").innerHTML = tablaHTML;
-        } catch (error) {
-          document.getElementById("otrosResuultados").innerHTML =
-          "Error al simular.";
-          document.getElementById("resultadoOptimo").innerHTML =
-            "Error al calcular óptimo.";
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
         }
-      }
 
-      document
-        .getElementById("formSimulacion")
-        .addEventListener("submit", simular);
-      document
-        .getElementById("formOptimo")
-        .addEventListener("submit", calcularOptimo);
+        function formatTime(minutes) {
+            const hours = Math.floor(minutes / 60);
+            const mins = Math.round(minutes % 60);
+            if (hours > 0) {
+                return `${hours}h ${mins}min`;
+            }
+            return `${mins}min`;
+        }
 
-      function toggleSubmenu(event) {
-        event.preventDefault(); // evita que el href="#" recargue la página
-        const submenu = document.getElementById("submenu");
-        submenu.style.display =
-          submenu.style.display === "none" ? "block" : "none";
-      }
+        function getProgressBarColor(percentage) {
+            if (percentage >= 85) return 'progress-red';
+            if (percentage >= 70) return 'progress-yellow';
+            if (percentage >= 50) return 'progress-green';
+            return 'progress-gray';
+        }
+
+        function createTooltip(text) {
+            return `<span class="tooltip">ℹ️<span class="tooltiptext">${text}</span></span>`;
+        }
+
+        function updateCurrentDataDisplay() {
+            const content = document.getElementById('current-data-content');
+            if (datosrepetidos.tasaLlegada_lambda > 0) {
+                content.innerHTML = `
+            <div class="data-item">
+              <span class="data-label">Tasa de llegada (λ):</span>
+              <span class="data-value">${datosrepetidos.tasaLlegada_lambda} clientes/hora</span>
+            </div>
+            <div class="data-item">
+              <span class="data-label">Tiempo de servicio promedio:</span>
+              <span class="data-value">${datosrepetidos.tasaServicio_mu} minutos</span>
+            </div>
+            <div class="data-item">
+              <span class="data-label">Número de servidores (c):</span>
+              <span class="data-value">${datosrepetidos.servidores_c} servidores</span>
+            </div>
+          `;
+            } else {
+                content.innerHTML = '<div class="no-data-message">Complete el formulario de simulación para ver los datos</div>';
+            }
+        }
+
+        async function simular(event) {
+            event.preventDefault();
+            showLoading();
+
+            const form = event.target;
+            const valores = {
+                tasa_llegada: parseFloat(form.tasa_llegada.value),
+                tiempo_servicio: parseFloat(form.tiempo_servicio.value),
+                servidores: parseInt(form.servidores.value),
+            };
+
+            datosrepetidos.lambda = valores.tasa_llegada;
+            datosrepetidos.tasaServicio_mu = valores.tiempo_servicio;
+            datosrepetidos.servidores_c = valores.servidores;
+
+            // Actualizar la visualización de datos actuales
+            updateCurrentDataDisplay();
+
+            try {
+                const res = await fetch("https://queuingtheorycalculatorapi.onrender.com/api/colas", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(valores),
+                });
+                const data = await res.json();
+
+                hideLoading();
+
+                if (data.error) {
+                    document.getElementById("resultadoSimulado").innerHTML = `<div class="error">${data.error}</div>`;
+                    document.getElementById("resultadoSimulado").style.display = 'block';
+                    return;
+                }
+
+                datosrepetidos.tasaLlegada_lambda = data.lambda;
+
+                const rhoPercentage = (data.rho * 100).toFixed(1);
+                const p0Percentage = (data.p0 * 100).toFixed(1);
+                const progressClass = getProgressBarColor(rhoPercentage);
+
+                document.getElementById("resultadoSimulado").innerHTML = `
+            <div class="result-item">
+              <div class="result-label">
+                Capacidad del sistema (ρ) ${createTooltip('Factor de utilización del sistema. Indica qué porcentaje del tiempo están ocupados los servidores (doctores).')}
+              </div>
+              <div class="result-value">
+                ${rhoPercentage}%
+                <div class="progress-bar">
+                  <div class="progress-fill ${progressClass}" style="width: ${rhoPercentage}%" data-percentage="${rhoPercentage}%"></div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="result-item">
+              <div class="result-label">
+                Probabilidad de sistema vacío (P₀) ${createTooltip('Probabilidad de que el sistema esté completamente vacío (sin clientes).')}
+              </div>
+              <div class="result-value">${p0Percentage}% (${data.p0})</div>
+            </div>
+            
+            <div class="result-item">
+              <div class="result-label">
+                Pacientes esperando en la cola (Lq) ${createTooltip('Número promedio de clientes esperando en la cola. Personas que esperan sin ser atendidas.')}
+              </div>
+              <div class="result-value"> ${Math.round(data.Lq)} (${data.Lq})</div>
+            </div>
+
+            <div class="result-item">
+              <div class="result-label">
+                Promedio de clientes en el sistema (L) ${createTooltip('Número promedio total de clientes en el sistema (en cola + siendo atendidos).')}
+              </div>
+              <div class="result-value">${data.L}</div>
+            </div>
+            
+            <div class="result-item">
+              <div class="result-label">
+                Tiempo que un cliente espera en la cola (Wq) ${createTooltip('Tiempo promedio que un cliente espera en la cola antes de ser atendido.')}
+              </div>
+              <div class="result-value">${formatTime(data.Wq)}</div>
+            </div>
+            
+            <div class="result-item">
+              <div class="result-label">
+                Tiempo que un cliente está en el sistema (W) ${createTooltip('Tiempo total promedio que un cliente permanece en el sistema (espera + servicio).')}
+              </div>
+              <div class="result-value">${formatTime(data.W)}</div>
+            </div>
+            
+            <div class="result-item">
+              <div class="result-label">
+                Tasa de servicio por servidor (μ) ${createTooltip('Cantidad promedio de pacientes que un solo servidor (doctor) puede atender por hora.')}
+              </div>
+              <div class="result-value"> ${Math.round(data.mu)} (${data.mu})</div>
+            </div>
+            
+            <div class="result-item">
+              <div class="result-label">
+                Recomendación ${createTooltip('Sugerencia basada en la utilización del sistema.')}
+              </div>
+              <div class="result-value">${data.recomendacion}</div>
+            </div>
+          `;
+
+                document.getElementById("resultadoSimulado").style.display = 'block';
+            } catch (error) {
+                hideLoading();
+                document.getElementById("resultadoSimulado").innerHTML = `<div class="error">Error al simular: ${error.message}</div>`;
+                document.getElementById("resultadoSimulado").style.display = 'block';
+            }
+        }
+
+        async function calcularOptimo(event) {
+            event.preventDefault();
+
+            if (datosrepetidos.tasaLlegada_lambda === 0) {
+                alert('Primero debe completar el formulario de simulación para obtener los datos del escenario actual.');
+                return;
+            }
+
+            const form = event.target;
+            const valores = {
+                tasa_llegada: datosrepetidos.tasaLlegada_lambda,
+                tiempo_servicio: datosrepetidos.tasaServicio_mu,
+                costo_espera: parseFloat(form.costo_espera.value),
+                costo_servidor: parseFloat(form.costo_servidor.value),
+            };
+
+            console.log(valores);
+
+            try {
+                const res = await fetch("https://queuingtheorycalculatorapi.onrender.com/api/colas/optimo", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(valores),
+                });
+
+                const data = await res.json();
+                console.log(data);
+
+                if (data.error) {
+                    document.getElementById("resultadoOptimo").innerHTML = `<div class="error">${data.error}</div>`;
+                    document.getElementById("resultadoOptimo").style.display = 'block';
+                    return;
+                }
+
+                const opt = data.optimo;
+                const rhoPercentage = (opt.rho * 100).toFixed(1);
+                const progressClass = getProgressBarColor(rhoPercentage);
+
+                document.getElementById("resultadoOptimo").innerHTML = `
+            <div class="result-item">
+              <div class="result-label">
+                Servidores óptimos ${createTooltip('Número de servidores que minimiza el costo total del sistema.')}
+              </div>
+              <div class="result-value">${opt.servidores}</div>
+            </div>
+            
+            <div class="result-item">
+              <div class="result-label">
+                Lq ${createTooltip('Número promedio de clientes en cola con la configuración óptima.')}
+              </div>
+              <div class="result-value">${opt.Lq}</div>
+            </div>
+            
+            <div class="result-item">
+              <div class="result-label">
+                Wq ${createTooltip('Tiempo promedio de espera en cola con la configuración óptima.')}
+              </div>
+              <div class="result-value">${formatTime(opt.Wq)}</div>
+            </div>
+            
+            <div class="result-item">
+              <div class="result-label">
+                ρ ${createTooltip('Factor de utilización con la configuración óptima.')}
+              </div>
+              <div class="result-value">
+                ${rhoPercentage}%
+                <div class="progress-bar">
+                  <div class="progress-fill ${progressClass}" style="width: ${rhoPercentage}%" data-percentage="${rhoPercentage}%"></div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="result-item">
+              <div class="result-label">
+                Costo total ${createTooltip('Costo total por minuto: (costo de espera × tiempo de espera × tasa de llegada) + (costo por servidor × número de servidores).')}
+              </div>
+              <div class="result-value">₡${opt.costo_total}</div>
+            </div>
+          `;
+
+                document.getElementById("resultadoOptimo").style.display = 'block';
+
+                const opciones = data.todas_las_opciones;
+                let tablaHTML = `
+            <h3 style="margin: 20px 0; color: #2c3e50;">📊 Comparación de todas las opciones</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Servidores</th>
+                  <th>Lq</th>
+                  <th>Wq</th>
+                  <th>ρ</th>
+                  <th>Costo total (₡)</th>
+                </tr>
+              </thead>
+              <tbody>
+          `;
+
+                opciones.forEach((op) => {
+                    const isOptimal = op.servidores === opt.servidores;
+                    tablaHTML += `
+              <tr ${isOptimal ? 'style="background: #e8f5e8; font-weight: 600;"' : ''}>
+                <td>${op.servidores} ${isOptimal ? '⭐' : ''}</td>
+                <td>${op.Lq}</td>
+                <td>${formatTime(op.Wq)}</td>
+                <td>${(op.rho * 100).toFixed(1)}%</td>
+                <td>₡${op.costo_total}</td>
+              </tr>
+            `;
+                });
+
+                tablaHTML += `</tbody></table>`;
+                document.getElementById("otrosResuultados").innerHTML = tablaHTML;
+            } catch (error) {
+                document.getElementById("resultadoOptimo").innerHTML = `<div class="error">Error al calcular óptimo: ${error.message}</div>`;
+                document.getElementById("resultadoOptimo").style.display = 'block';
+            }
+        }
+
+        document.getElementById("formSimulacion").addEventListener("submit", simular);
+        document.getElementById("formOptimo").addEventListener("submit", calcularOptimo);
+
+        // Inicializar la visualización de datos actuales
+        updateCurrentDataDisplay();
     </script>
-  </body>
+</body>
+
 </html>
