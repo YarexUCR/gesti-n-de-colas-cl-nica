@@ -546,7 +546,6 @@
           if (mmcData.error) {
             document.getElementById("datosRealesResultados").innerHTML = `<div class="error">${mmcData.error}</div>`;
           } else {
-            datosReales.mu = mmcData.mu;
             
             const rhoPercentage = (mmcData.rho * 100).toFixed(1);
             const progressClass = getProgressBarColor(rhoPercentage);
