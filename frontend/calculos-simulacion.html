@@ -775,28 +775,28 @@
                 document.getElementById("resultadoOptimo").innerHTML = `
             <div class="result-item">
               <div class="result-label">
-                Servidores óptimos ${createTooltip('Número de servidores que minimiza el costo total del sistema.')}
+                Servidores óptimos ${createTooltip('Número de doctores (servidores) que minimiza el costo total del sistema.')}
               </div>
-              <div class="result-value">${opt.servidores}</div>
+              <div class="result-value"> ${opt.servidores}</div>
             </div>
             
             <div class="result-item">
               <div class="result-label">
-                Lq ${createTooltip('Número promedio de clientes en cola con la configuración óptima.')}
+                Pacientes en cola (Lq) ${createTooltip('Número promedio de pacientes en cola con la configuración óptima.')}
               </div>
-              <div class="result-value">${opt.Lq}</div>
+              <div class="result-value">${Math.round(opt.Lq)} (${opt.Lq})</div>
             </div>
             
             <div class="result-item">
               <div class="result-label">
-                Wq ${createTooltip('Tiempo promedio de espera en cola con la configuración óptima.')}
+                Tiempo de espera en cola (Wq) ${createTooltip('Tiempo promedio de espera en cola con la configuración óptima.')}
               </div>
               <div class="result-value">${formatTime(opt.Wq)}</div>
             </div>
             
             <div class="result-item">
               <div class="result-label">
-                ρ ${createTooltip('Factor de utilización con la configuración óptima.')}
+                Capacidad del sistema (ρ) ${createTooltip('Factor de utilización con la configuración óptima.')}
               </div>
               <div class="result-value">
                 ${rhoPercentage}%
